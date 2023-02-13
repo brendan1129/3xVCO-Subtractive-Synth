@@ -1,253 +1,74 @@
+<Cabbage> bounds(0, 0, 0, 0)
+form caption("Brendan's SubSynth") size(800, 500), colour(100, 122, 153), guiMode("queue"), pluginId("def1")
+keyboard bounds(0, 406, 800, 95) channel("keyboard2") mouseOverKeyColour(0, 0, 255, 128) blackNoteColour(48, 64, 99, 255) whiteNoteColour(212, 212, 212, 255) keypressBaseOctave(6)
+groupbox bounds(190, 12, 270, 120) channel("groupbox10009") text("Envelope") colour(0, 0, 0, 128) {
+rslider bounds(20, 60, 50, 50), channel("att"), range(0, 1, 0.01, 1, 0.01), text("Attack") colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(80, 60, 50, 50), channel("dec"), range(0, 1, 0.5, 1, 0.01), text("Decay") colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(140, 60, 50, 50), channel("sus"), range(0, 1, 0.5, 1, 0.01), text("Sustain") markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) colour(0, 0, 255, 128) textColour(255, 255, 255, 255)
+rslider bounds(200, 60, 50, 50), channel("rel"), range(0, 1, 0.7, 1, 0.01), text("Release") trackerColour(255, 255, 255, 255) colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) fontColour(0, 0, 0, 255) textColour(255, 255, 255, 255)
+}
+groupbox bounds(24, 12, 146, 120) channel("groupbox10010") colour(0, 0, 0, 128) text("Wave") {
+optionbutton bounds(16, 30, 113, 23) channel("waveform"), , corners(5), colour(0, 0, 255, 128) text("Sin","Saw", "Square", "Pulse")
+rslider  bounds(16, 60, 40, 50), channel("pitch1"),  range(-12, 12, 0, 1, 1),  text("Pitch"),  , colour(0, 0, 255, 128), trackerColour(255, 255, 255, 255), markerColour(0, 0, 0, 255)
+rslider  bounds(90, 60, 40, 50), channel("fine1"),   range(-1,    1,     0,     1,     .001 ),  text("Fine"),   textBox(1), colour(0, 0, 255, 128), markerColour(0, 0, 0, 255), trackerColour(255, 255, 255, 255)
+}
+groupbox bounds(480, 12, 298, 120) channel("groupbox10011") colour(0, 0, 0, 128) text("LFO") {
+optionbutton bounds(88, 30, 113, 23) channel("lfoType"), corners(5), colour(0, 0, 255, 128) text("Sine", "Triangle", "Bipolar", "Unipolar", "Saw", "Saw-Down" )
+rslider bounds(16, 60, 40, 50), channel("cutoff"), range(0, 22000, 2000, 0.5, 0.01), text("Cut-Off")
+rslider bounds(90, 60, 40, 50), channel("res"), range(0, 1, 0.7, 1, 0.01), text("Resonance")
+rslider bounds(160, 60, 40, 50), channel("LFOFreq"), range(0, 10, 0, 1, 0.01), text("LFO Freq")
+rslider bounds(240, 60, 40, 50), channel("amp"), range(0, 1, 0.7, 1, 0.01), text("Amp")
+}
+</Cabbage>
 <CsoundSynthesizer>
 <CsOptions>
--+rtmidi=NULL -M0 -m0d --midi-key-cps=4 --midi-velocity-amp=5
+/*-d -n */  -+rtmidi=NULL -M0 --midi-key-cps=4 --midi-velocity-amp=5 
 </CsOptions>
 <CsInstruments>
-
-sr = 44100
-ksmps = 64
+; Initialize the global variables. 
+ksmps = 32
 nchnls = 2
 0dbfs = 1
+massign 0, 1
 
-instr 1 ; sine wave
-	;aSin	oscils 0dbfs/4, 440, 0
-	;out aSin
-	/*kSin chnget "sinWave"
-	kSinChange changed kSin
-	kSaw chnget "sawWave"
-	kSawChange changed kSaw
-	
-	if kSinChange == 1 kgoto sinWave
-	if kSawChange == 1 kgoto sawWave
-	
-		iFreq = p4
-		iAmp = 0dbfs/4
-		aOut vco2 iAmp, iFreq
-		
-	sinWave:
-		iFreq = p4
-		iAmp = 0dbfs/4
-		aOut oscili iAmp, iFreq
-		outs aOut, aOut
-		goto End
-	sawWave:
-		outs aOut
-		goto End
-	End:*/
-	iFreq = p4
-	iAmp = 0dbfs/4
-	iWave invalue "waveform"
-	aOut oscili iAmp, iFreq, iWave
-	outs aOut, aOut
-endin
+;instrument will be triggered by keyboard widget
+instr 1
 
+kpitch chnget "pitch1"
+kfine chnget "fine1"
+imidi notnum
+kcps cpsmidinn imidi+kpitch+kfine
+kpb pchbend -24, 24
+kcps = kcps + kpb
 
-instr 2 ; saw wave 
-	aOut vco2 1, 440
-	out aOut
-endin
+iFreq = p4
+iAmp = p5
+iAtt chnget "att" ; Attack Mod
+iDec chnget "dec" ; Decay Mod
+iSus chnget "sus" ; Sustain Mod
+iRel chnget "rel" ; Release Mod
 
-instr 3 ; square wave
-endin
+kRes chnget "res"
+kCutOff chnget "cutoff"
+kLFOFreq chnget "LFOFreq"
+kAmp chnget "amp"
 
-instr 4 ; triangle wave
+kEnv madsr iAtt, iDec, iSus, iRel  ; Calculate classical ASDR Envelope
+
+aOut poscil iAmp, kcps, chnget:i("waveform")+1
+kLFO lfo 1, kLFOFreq, 5
+aLP butterlp aOut, kCutOff*kLFO
+outs aLP*kEnv, aLP*kEnv
+
 endin
 
 </CsInstruments>
 <CsScore>
-f1 0 4096 10 1 
-f2 0 4096 10 1 .5
-f3 0 4096 10 1 .5 .2 .1 
-	f0 z
-   ; a sine wave.
-   ; saw
-
+;causes Csound to run for about 7000 years...
+f1 0 4096 10 1 ; sine wave
+f2 0 4096 10 1 .5 ; saw wave
+f3 0 4096 10 1 .5 .2 .1 ;square wave
+f4 0 4096 10 1 1   1   1    0.7 0.5   0.3  0.1 ; pulse wave
+f0 z
 </CsScore>
 </CsoundSynthesizer>
-
-
-<bsbPanel>
- <label>Widgets</label>
- <objectName/>
- <x>311</x>
- <y>139</y>
- <width>882</width>
- <height>375</height>
- <visible>true</visible>
- <uuid/>
- <bgcolor mode="background">
-  <r>174</r>
-  <g>214</g>
-  <b>240</b>
- </bgcolor>
- <bsbObject type="BSBButton" version="2">
-  <objectName>sinWave</objectName>
-  <x>60</x>
-  <y>28</y>
-  <width>146</width>
-  <height>126</height>
-  <uuid>{1719fe6c-cfee-4d9e-8b69-046b8fafc59e}</uuid>
-  <visible>true</visible>
-  <midichan>0</midichan>
-  <midicc>0</midicc>
-  <description/>
-  <type>value</type>
-  <pressedValue>1.00000000</pressedValue>
-  <stringvalue/>
-  <text>Sin Wave</text>
-  <image>/</image>
-  <eventLine/>
-  <latch>true</latch>
-  <momentaryMidiButton>false</momentaryMidiButton>
-  <latched>false</latched>
-  <fontsize>15</fontsize>
- </bsbObject>
- <bsbObject type="BSBButton" version="2">
-  <objectName>button2</objectName>
-  <x>59</x>
-  <y>203</y>
-  <width>146</width>
-  <height>126</height>
-  <uuid>{7f2060d6-bf4d-4ce1-a5cd-d8184d0ac653}</uuid>
-  <visible>true</visible>
-  <midichan>0</midichan>
-  <midicc>0</midicc>
-  <description/>
-  <type>event</type>
-  <pressedValue>1.00000000</pressedValue>
-  <stringvalue/>
-  <text>Square Wave</text>
-  <image>/</image>
-  <eventLine>i1 0 10</eventLine>
-  <latch>false</latch>
-  <momentaryMidiButton>false</momentaryMidiButton>
-  <latched>false</latched>
-  <fontsize>15</fontsize>
- </bsbObject>
- <bsbObject type="BSBButton" version="2">
-  <objectName>Button3</objectName>
-  <x>247</x>
-  <y>202</y>
-  <width>146</width>
-  <height>126</height>
-  <uuid>{b5155738-c270-497e-a6f5-6767c2b77cf3}</uuid>
-  <visible>true</visible>
-  <midichan>0</midichan>
-  <midicc>0</midicc>
-  <description/>
-  <type>event</type>
-  <pressedValue>1.00000000</pressedValue>
-  <stringvalue/>
-  <text>Triangle Wave</text>
-  <image>/</image>
-  <eventLine>i1 0 10</eventLine>
-  <latch>false</latch>
-  <momentaryMidiButton>false</momentaryMidiButton>
-  <latched>false</latched>
-  <fontsize>15</fontsize>
- </bsbObject>
- <bsbObject type="BSBButton" version="2">
-  <objectName>sawWave</objectName>
-  <x>246</x>
-  <y>27</y>
-  <width>146</width>
-  <height>126</height>
-  <uuid>{b99c15db-6723-4aab-a393-549074174d74}</uuid>
-  <visible>true</visible>
-  <midichan>0</midichan>
-  <midicc>0</midicc>
-  <description/>
-  <type>value</type>
-  <pressedValue>1.00000000</pressedValue>
-  <stringvalue/>
-  <text>Saw Wave</text>
-  <image>/</image>
-  <eventLine>i 1 0 1</eventLine>
-  <latch>true</latch>
-  <momentaryMidiButton>false</momentaryMidiButton>
-  <latched>true</latched>
-  <fontsize>15</fontsize>
- </bsbObject>
- <bsbObject type="BSBVSlider" version="2">
-  <objectName>slider4</objectName>
-  <x>454</x>
-  <y>26</y>
-  <width>75</width>
-  <height>303</height>
-  <uuid>{7e9427b4-04ec-43b2-8f6c-54b43a8897b8}</uuid>
-  <visible>true</visible>
-  <midichan>0</midichan>
-  <midicc>0</midicc>
-  <description/>
-  <minimum>0.00000000</minimum>
-  <maximum>1.00000000</maximum>
-  <value>0.18481848</value>
-  <mode>lin</mode>
-  <mouseControl act="jump">continuous</mouseControl>
-  <resolution>-1.00000000</resolution>
-  <randomizable group="0">false</randomizable>
- </bsbObject>
- <bsbObject type="BSBLabel" version="2">
-  <objectName/>
-  <x>451</x>
-  <y>337</y>
-  <width>80</width>
-  <height>25</height>
-  <uuid>{d1e76060-48e9-42ae-862b-e59c1008dc2c}</uuid>
-  <visible>true</visible>
-  <midichan>0</midichan>
-  <midicc>-3</midicc>
-  <description/>
-  <label>Pitch</label>
-  <alignment>center</alignment>
-  <valignment>top</valignment>
-  <font>Arial</font>
-  <fontsize>10</fontsize>
-  <precision>3</precision>
-  <color>
-   <r>0</r>
-   <g>0</g>
-   <b>0</b>
-  </color>
-  <bgcolor mode="nobackground">
-   <r>32</r>
-   <g>235</g>
-   <b>220</b>
-  </bgcolor>
-  <bordermode>true</bordermode>
-  <borderradius>1</borderradius>
-  <borderwidth>2</borderwidth>
- </bsbObject>
- <bsbObject type="BSBSpinBox" version="2">
-  <objectName>waveform</objectName>
-  <x>619</x>
-  <y>202</y>
-  <width>80</width>
-  <height>25</height>
-  <uuid>{c7e01939-ca81-46d5-bc3a-66c15a558d09}</uuid>
-  <visible>true</visible>
-  <midichan>0</midichan>
-  <midicc>0</midicc>
-  <description/>
-  <alignment>left</alignment>
-  <font>Arial</font>
-  <fontsize>10</fontsize>
-  <color>
-   <r>255</r>
-   <g>255</g>
-   <b>255</b>
-  </color>
-  <bgcolor mode="nobackground">
-   <r>255</r>
-   <g>255</g>
-   <b>255</b>
-  </bgcolor>
-  <resolution>1.00000000</resolution>
-  <minimum>0</minimum>
-  <maximum>5</maximum>
-  <randomizable group="0">false</randomizable>
-  <value>4</value>
- </bsbObject>
-</bsbPanel>
-<bsbPresets>
-</bsbPresets>
