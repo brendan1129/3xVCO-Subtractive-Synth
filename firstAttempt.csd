@@ -1,41 +1,153 @@
+/* 
+------------------------------------
+Title: 3xVCO Subtractive Synthesizer
+------------------------------------
+
+---------------------------------------------------------------------------------------------
+Author: Brendan Hannum, senior-level Computer Science student at Saint Joseph's University
+---------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+Description: 
+
+The purpose of this project is to give my best attempt at recreating the 3x Oscillator by 
+Image-Line, the company behind FL Studio. There are a few key features missing from here that are available
+in the 3xOsc, which I will list below:
+
+    - Phase Offset Control for each wave
+    - Invert Phase Option for each wave
+    - Sine, Rounded Saw, Noise, and Custom as options for generatable waves
+    - AM OSC 3, which converts the third oscillator into an amplitude modulator for the first two oscillators
+    - HQ Option which provides anti-aliasing for the oscillators from 15Hz to 20kHz
+
+Admittedly, a portion of these features are missing due to my own shortcomings and lack of expertise in the CSound language.
+However, thanks to numerous contributors in the languages community, I was able to implement other features which are not directly available 
+in the 3xOsc. I will also list these capabilities below:
+
+    - Resonant High and Low pass filter
+    - ASDR Envelope
+    - Low-Frequency Oscillation (LFO) 
+    
+I am very pleased with the results thus far, but I am also aware there is much more that could be done. 
+I plan to continue working on this and refining it. With the possibility of adding new features as I gain more experience with CSound and Cabbage.
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+Acknowledgements:
+
+I was absolutely astounded by the resources that I was able to obtain surrounding this subject of audio programming. 
+The community has been running strong for decades now, and still I was able to come into personal contact with key contributors of CSound 
+on multiple occasions. The following people are almost entirely responsible for what I learned and was able to create here:
+
+    - Rory Walsh, Lead Developer of Cabbage and extremely helpful community member
+    - Iain McCurdy, Sound Designer of Cabbage and author of numerous examples I was able to extract knowledge from
+    - Gordon Boyle, Web Developer of Cabbage 
+    - Steven Yi, Accomplished Developer of CSound and responsible for introducing me to features of the language through his YouTube channel
+--------------------------------------------------------------------------------------------------------------------------------------------
+*/
 <Cabbage> bounds(0, 0, 0, 0)
 ; GUI Initialization
-form caption("Brendan's SubSynth") size(800, 500), colour(100, 122, 153), guiMode("queue"), pluginId("def1")
+form caption("3xVCO") size(800, 500), colour(100, 122, 153), guiMode("queue"), pluginId("def1")
 keyboard bounds(0, 406, 800, 95) channel("keyboard2") mouseOverKeyColour(0, 0, 255, 128) blackNoteColour(48, 64, 99, 255) whiteNoteColour(212, 212, 212, 255) keypressBaseOctave(6)
 
-; Wave Selection 
+;|---------------------------------------------START WAVE #1---------------------------------------------|
+; Wave Selection #1
 groupbox bounds(4, 8, 120, 120) channel("groupbox10010") colour(0, 0, 0, 128) text("Wave") {
 optionbutton bounds(20, 30, 80, 23) channel("waveform"), , corners(5), colour(0, 0, 255, 128) text("Saw", "Square", "Triangle")
-rslider  bounds(16, 60, 40, 50), channel("pitch1"),  range(-12, 12, 0, 1, 1),  text("Pitch"),  , colour(0, 0, 255, 128), trackerColour(255, 255, 255, 255), markerColour(0, 0, 0, 255)
+rslider  bounds(16, 60, 40, 50), channel("pitch1"),  range(-24, 24, 0, 1, 1),  text("Pitch"),  , colour(0, 0, 255, 128), trackerColour(255, 255, 255, 255), markerColour(0, 0, 0, 255)
 rslider  bounds(65, 60, 40, 50), channel("fine1"),   range(-1,    1,     0,     1,     .001 ),  text("Fine"),   textBox(1), colour(0, 0, 255, 128), markerColour(0, 0, 0, 255), trackerColour(255, 255, 255, 255)
 }
-; ASDR Envelope
-groupbox bounds(130, 8, 270, 120) channel("groupbox10009") text("Envelope") colour(0, 0, 0, 128) {
+; ASDR Envelope #1
+groupbox bounds(130, 8, 270, 120) channel("groupbox100011") text("Envelope") colour(0, 0, 0, 128) {
 rslider bounds(20, 60, 50, 50), channel("att"), range(0.01, 1, 0.01, 1, 0.01), text("Attack") colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
 rslider bounds(80, 60, 50, 50), channel("dec"), range(0.01, 1, 0.5, 1, 0.01), text("Decay") colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
 rslider bounds(140, 60, 50, 50), channel("sus"), range(0.01, 1, 0.5, 1, 0.01), text("Sustain") markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) colour(0, 0, 255, 128) textColour(255, 255, 255, 255)
 rslider bounds(200, 60, 50, 50), channel("rel"), range(0.01, 1, 0.7, 1, 0.01), text("Release") trackerColour(255, 255, 255, 255) colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) fontColour(0, 0, 0, 255) textColour(255, 255, 255, 255)
 }
-; Filter 
-groupbox bounds(406, 8, 140, 119) channel("groupbox10011") colour(0, 0, 0, 128) text("Filter") {
-optionbutton bounds(20, 30, 102, 23) channel("filterType"), corners(5),  text("LowPass", "HighPass", "BandPass", "BandReject", "AllPass") colour:1(0, 0, 255, 128)
+; Filter #1
+groupbox bounds(406, 8, 140, 119) channel("groupbox10012") colour(0, 0, 0, 128) text("Filter") {
+optionbutton bounds(20, 30, 102, 23) channel("filterType"), corners(5),  text("LowPass", "HighPass") colour:1(0, 0, 255, 128)
 rslider bounds(14, 60, 54, 50), channel("cutoff"), range(0, 22000, 2000, 0.5, 0.01), text("Cut"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
-rslider bounds(72, 60, 54, 50), channel("res"), range(.01,  100,     .01,  1,    .01  ), text("Res"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(72, 60, 54, 50), channel("res"), range(.01,  1,     .01,  1,    .01  ), text("Res"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
 }
-; LFO
-groupbox bounds(552, 8, 80, 119)  channel("groupbox26") colour(0, 0, 0, 128) text("LFO")  {
+; LFO #1
+groupbox bounds(552, 8, 80, 119)  channel("groupbox10013") colour(0, 0, 0, 128) text("LFO")  {
 rslider bounds(22, 20, 34, 50), channel("LFOFreq"), range(0, 10, 0, 1, 0.01), text("Freq"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
 rslider bounds(22, 65, 34, 50), channel("amp"), range(0, 1, 0.7, 1, 0.01), text("Amp"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
 }
-; Panning & Volume Control
-groupbox bounds(638, 8, 150, 119) channel("groupbox10017") text("Options") colour(0, 0, 0, 128) {
+; Panning & Volume Control #1
+groupbox bounds(638, 8, 150, 119) channel("groupbox10014") text("Options") colour(0, 0, 0, 128) {
 rslider bounds(28, 20, 34, 50), channel("Panning"), range(0, 1, 0.5, 1, 0.01), text("Pan"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
-rslider bounds(28, 65, 34, 50), channel("Volume"), range(0, 2, 0.5, 1, 0.01), text("Gain"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
-rslider bounds(78, 37, 64, 64), channel("detune"), range(0, 2, 0, 1, 0.1), text("Detune"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(28, 65, 34, 50), channel("Volume"), range(0, 2, 1, 1, 0.01), text("Gain"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+vslider bounds(78, 27, 70, 84), channel("detune"), range(-1, 1, 0, 1, 0.1), text("Detune"), colour(0, 0, 255, 128) markerColour(100, 100, 100, 255) trackerThickness(0.05) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
 }
-rslider bounds(150, 200, 50, 50), channel("Depth"), range(-1, 1, 0, 1, 0.1), text("Depth")
-rslider bounds(200, 200, 50, 50), channel("Rate"), range(0, 22000, 440, 1, 0.1), text("Rate")
+;|---------------------------------------------END WAVE #1---------------------------------------------|
 
+;|---------------------------------------------START WAVE #2---------------------------------------------|
+; Wave Selection #2
+groupbox bounds(4, 132, 120, 120) channel("groupbox10021") colour(0, 0, 0, 128) text("Wave") {
+optionbutton bounds(20, 30, 80, 23) channel("waveform2"), , corners(5), colour(0, 0, 255, 128) text("Saw", "Square", "Triangle")
+rslider  bounds(16, 60, 40, 50), channel("pitch2"),  range(-24, 24, 0, 1, 1),  text("Pitch"),  , colour(0, 0, 255, 128), trackerColour(255, 255, 255, 255), markerColour(0, 0, 0, 255)
+rslider  bounds(65, 60, 40, 50), channel("fine2"),   range(-1,    1,     0,     1,     .001 ),  text("Fine"),   textBox(1), colour(0, 0, 255, 128), markerColour(0, 0, 0, 255), trackerColour(255, 255, 255, 255)
+}
+; ASDR Envelope #2
+groupbox bounds(130, 132, 270, 120) channel("groupbox10022") text("Envelope") colour(0, 0, 0, 128) {
+rslider bounds(20, 60, 50, 50), channel("att2"), range(0.01, 1, 0.01, 1, 0.01), text("Attack") colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(80, 60, 50, 50), channel("dec2"), range(0.01, 1, 0.5, 1, 0.01), text("Decay") colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(140, 60, 50, 50), channel("sus2"), range(0.01, 1, 0.5, 1, 0.01), text("Sustain") markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) colour(0, 0, 255, 128) textColour(255, 255, 255, 255)
+rslider bounds(200, 60, 50, 50), channel("rel2"), range(0.01, 1, 0.7, 1, 0.01), text("Release") trackerColour(255, 255, 255, 255) colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) fontColour(0, 0, 0, 255) textColour(255, 255, 255, 255)
+}
+; Filter #2
+groupbox bounds(406, 132, 140, 119) channel("groupbox10023") colour(0, 0, 0, 128) text("Filter") {
+optionbutton bounds(20, 30, 102, 23) channel("filterType2"), corners(5),  text("LowPass", "HighPass") colour:1(0, 0, 255, 128)
+rslider bounds(14, 60, 54, 50), channel("cutoff2"), range(0, 22000, 2000, 0.5, 0.01), text("Cut"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(72, 60, 54, 50), channel("res2"), range(.01,  1,     .01,  1,    .01  ), text("Res"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+}
+; LFO #2
+groupbox bounds(552, 132, 80, 119)  channel("groupbox10024") colour(0, 0, 0, 128) text("LFO")  {
+rslider bounds(22, 20, 34, 50), channel("LFOFreq2"), range(0, 10, 0, 1, 0.01), text("Freq"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(22, 65, 34, 50), channel("amp2"), range(0, 1, 0.7, 1, 0.01), text("Amp"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+}
+; Panning & Volume Control #2
+groupbox bounds(638, 132, 150, 119) channel("groupbox10025") text("Options") colour(0, 0, 0, 128) {
+rslider bounds(28, 20, 34, 50), channel("Panning2"), range(0, 1, 0.5, 1, 0.01), text("Pan"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(28, 65, 34, 50), channel("Volume2"), range(0, 2, 0, 1, 0.01), text("Gain"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+vslider bounds(78, 27, 70, 84), channel("detune2"), range(-1, 1, 0, 1, 0.1), text("Detune"), colour(0, 0, 255, 128) markerColour(100, 100, 100, 255) trackerThickness(0.05) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+}
+;|---------------------------------------------END WAVE #2---------------------------------------------|
+
+;|---------------------------------------------START WAVE #3---------------------------------------------|
+; Wave Selection #3
+groupbox bounds(4, 256, 120, 120) channel("groupbox10031") colour(0, 0, 0, 128) text("Wave") {
+optionbutton bounds(20, 30, 80, 23) channel("waveform3"), , corners(5), colour(0, 0, 255, 128) text("Saw", "Square", "Triangle")
+rslider  bounds(16, 60, 40, 50), channel("pitch3"),  range(-24, 24, 0, 1, 1),  text("Pitch"),  , colour(0, 0, 255, 128), trackerColour(255, 255, 255, 255), markerColour(0, 0, 0, 255)
+rslider  bounds(65, 60, 40, 50), channel("fine3"),   range(-1,    1,     0,     1,     .001 ),  text("Fine"),   textBox(1), colour(0, 0, 255, 128), markerColour(0, 0, 0, 255), trackerColour(255, 255, 255, 255)
+}
+; ASDR Envelope #3
+groupbox bounds(130, 256, 270, 120) channel("groupbox10032") text("Envelope") colour(0, 0, 0, 128) {
+rslider bounds(20, 60, 50, 50), channel("att3"), range(0.01, 1, 0.01, 1, 0.01), text("Attack") colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(80, 60, 50, 50), channel("dec3"), range(0.01, 1, 0.5, 1, 0.01), text("Decay") colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(140, 60, 50, 50), channel("sus3"), range(0.01, 1, 0.5, 1, 0.01), text("Sustain") markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) colour(0, 0, 255, 128) textColour(255, 255, 255, 255)
+rslider bounds(200, 60, 50, 50), channel("rel3"), range(0.01, 1, 0.7, 1, 0.01), text("Release") trackerColour(255, 255, 255, 255) colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) fontColour(0, 0, 0, 255) textColour(255, 255, 255, 255)
+}
+; Filter #3
+groupbox bounds(406, 256, 140, 119) channel("groupbox10033") colour(0, 0, 0, 128) text("Filter") {
+optionbutton bounds(20, 30, 102, 23) channel("filterType3"), corners(5),  text("LowPass", "HighPass") colour:1(0, 0, 255, 128)
+rslider bounds(14, 60, 54, 50), channel("cutoff3"), range(0, 22000, 2000, 0.5, 0.01), text("Cut"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(72, 60, 54, 50), channel("res3"), range(.01,  1,     .01,  1,    .01  ), text("Res"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+}
+; LFO #3
+groupbox bounds(552, 256, 80, 119)  channel("groupbox10034") colour(0, 0, 0, 128) text("LFO")  {
+rslider bounds(22, 20, 34, 50), channel("LFOFreq3"), range(0, 10, 0, 1, 0.01), text("Freq"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(22, 65, 34, 50), channel("amp3"), range(0, 1, 0.7, 1, 0.01), text("Amp"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+}
+; Panning & Volume Control #3
+groupbox bounds(638, 256, 150, 119) channel("groupbox10035") text("Options") colour(0, 0, 0, 128) {
+rslider bounds(28, 20, 34, 50), channel("Panning3"), range(0, 1, 0.5, 1, 0.01), text("Pan"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+rslider bounds(28, 65, 34, 50), channel("Volume3"), range(0, 2, 0, 1, 0.01), text("Gain"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+vslider bounds(78, 27, 70, 84), channel("detune3"), range(-1, 1, 0, 1, 0.1), text("Detune"), colour(0, 0, 255, 128) markerColour(100, 100, 100, 255) trackerThickness(0.05) trackerColour(255, 255, 255, 255) textColour(255, 255, 255, 255)
+}
+;|---------------------------------------------END WAVE #3---------------------------------------------|
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>
@@ -53,13 +165,26 @@ instr 1
 ; Pitch and Fine Tune Control
 kpitch chnget "pitch1"
 kfine chnget "fine1"
+
+kpitch2 chnget "pitch2"
+kfine2 chnget "fine2"
+
+kpitch3 chnget "pitch3"
+kfine3 chnget "fine3"
 ; Get midi note number using notnum
 imidi notnum
 ; convert midi number to cycles per second ( frequency )
 kcps cpsmidinn imidi
+
+kcps2 cpsmidinn imidi
+
+kcps3 cpsmidinn imidi
 ; Factor in the values of pitch and fine sliders
 kcps = kcps*semitone(kpitch)*cent(kfine*100)
 
+kcps20 = kcps2*semitone(kpitch2)*cent(kfine2*100)
+
+kcps30 = kcps3*semitone(kpitch3)*cent(kfine3*100)
 ; Amplitude or Volume of the Note will come from the p-field assigned in <CsOptions>
 iAmp = p5
 ; Envelope Control
@@ -67,65 +192,141 @@ iAtt chnget "att" ; Attack Mod
 iDec chnget "dec" ; Decay Mod
 iSus chnget "sus" ; Sustain Mod
 iRel chnget "rel" ; Release Mod
+
+iAtt2 chnget "att2"
+iDec2 chnget "dec2"
+iSus2 chnget "sus2"
+iRel2 chnget "rel2"
+
+iAtt3 chnget "att3"
+iDec3 chnget "dec3"
+iSus3 chnget "sus3"
+iRel3 chnget "rel3"
 ; Filter Control
 kRes chnget "res"
 kCutOff chnget "cutoff"
 iFType chnget "filterType"
+
+kRes2 chnget "res2"
+kCutOff2 chnget "cutoff2"
+iFType2 chnget "filterType2"
+
+kRes3 chnget "res3"
+kCutOff3 chnget "cutoff3"
+iFType3 chnget "filterType3"
 ; LFO Control
 kLFOFreq chnget "LFOFreq"
 kAmp chnget "amp"
+
+kLFOFreq2 chnget "LFOFreq2"
+kAmp2 chnget "amp2"
+
+kLFOFreq3 chnget "LFOFreq3"
+kAmp3 chnget "amp3"
 ; Options Control
 kPan chnget "Panning"
 kVol chnget "Volume"
 kDet chnget "detune"
+
+kPan2 chnget "Panning2"
+kVol2 chnget "Volume2"
+kDet2 chnget "detune2"
+
+kPan3 chnget "Panning3"
+kVol3 chnget "Volume3"
+kDet3 chnget "detune3"
 ; Calculate classical ASDR Envelope
 kEnv madsr iAtt, iDec, iSus, iRel, 0, 1  
 
-kD chnget "Depth"
-kR chnget "Rate"
+kEnv2 madsr iAtt2, iDec2, iSus2, iRel2, 0, 1
 
+kEnv3 madsr iAtt3, iDec3, iSus3, iRel3, 0, 1
+; Detune by duplicating frequency signal and offsetting by an inverted, constant rate
 kcps1 = kcps + kDet
 kcps2 = kcps - kDet
 
-iWaves[] fillarray 4, 10, 12
-kPW init 0.25
-printk2 kcps1
-printk2 kcps2
-if kDet > 0 then 
-    aOut vco2 iAmp, kcps1, iWaves[chnget:i("waveform")], kPW
-    aOut2 vco2 iAmp, kcps2, iWaves[chnget:i("waveform")], kPW
-elseif kDet == 0 then
-    aOut vco2 iAmp, kcps, iWaves[chnget:i("waveform")], kPW
-    aOut2 vco2 iAmp, kcps, iWaves[chnget:i("waveform")], kPW
-endif
+kcps21 = kcps20 + kDet2
+kcps22 = kcps20 + kDet2
+
+kcps31 = kcps30 + kDet3
+kcps32 = kcps30 + kDet3
+; Fill array with VCO2 options: Integrated Saw, Square, and Triangle
+iWaves[] fillarray 8, 10, 12
+; init Pulse Width for "thicker" sounds
+kPW init 0.5
+; Two signals for each channel output 
+aOut vco2 iAmp, kcps1, iWaves[chnget:i("waveform")], kPW
+aOut2 vco2 iAmp, kcps2, iWaves[chnget:i("waveform")], kPW
+
+aOut21 vco2 iAmp, kcps21, iWaves[chnget:i("waveform2")], kPW
+aOut22 vco2 iAmp, kcps22, iWaves[chnget:i("waveform2")], kPW
+
+aOut31 vco2 iAmp, kcps31, iWaves[chnget:i("waveform3")], kPW
+aOut32 vco2 iAmp, kcps32, iWaves[chnget:i("waveform3")], kPW
+; Modify by volume
 aOut = aOut * kVol
 aOut2 = aOut2 * kVol
-kord init 8
-kfdbk init 0.5
-kPLFO lfo kD*0.5, kR, 0
-kPLFO2 lfo kD*0.5, kR, 0
-aP phaser1 aOut, kPLFO+(kDepth * 0.5), kord, kfdbk
-aP2 phaser1 aOut2, kPLFO2+(kDepth * 0.5), kord, kfdbk
+
+aOut21 = aOut21 * kVol2
+aOut22 = aOut22 * kVol2
+
+aOut31 = aOut31 * kVol3
+aOut32 = aOut32 * kVol3
+; LFO which oscillates between + and - value of defined frequency
 kLFO lfo kAmp, kLFOFreq, 0
 kLFO2 lfo kAmp, kLFOFreq, 0
+
+kLFO21 lfo kAmp2, kLFOFreq2, 0
+kLFO22 lfo kAmp2, kLFOFreq2, 0
+
+kLFO31 lfo kAmp3, kLFOFreq3, 0
+kLFO32 lfo kAmp3, kLFOFreq3, 0
+; Tweaking LFO to avoid thumping result
 kLFO *= 0.5
 kLFO += 0.5
 kLFO2 *= 0.5
 kLFO2 += 0.5
-aFilt bqrez aP, kCutOff*kLFO, kRes, iFType
-aFilt2 bqrez aP2, kCutOff *kLFO2, kRes, iFType
-aL2, aR2 pan2 aFilt2*kEnv, kPan
+
+kLFO21 *= 0.5
+kLFO21 += 0.5
+kLFO22 *= 0.5
+kLFO22 += 0.5
+
+kLFO31 *= 0.5
+kLFO31 += 0.5
+kLFO32 *= 0.5
+kLFO32 += 0.5
+; Rezzy filter applied with LFO
+iFilters[] fillarray 0,2
+aFilt rbjeq aOut, kCutOff*kLFO, 1, kRes, iFilters[iFType]
+aFilt2 rbjeq aOut2, kCutOff *kLFO2, 1, kRes, iFilters[iFType]
+
+aFilt21 rbjeq aOut21, kCutOff2*kLFO21, 1, kRes2, iFilters[iFType2]
+aFilt22 rbjeq aOut22, kCutOff2 *kLFO22, 1, kRes2, iFilters[iFType2]
+
+aFilt31 rbjeq aOut31, kCutOff3*kLFO31, 1, kRes3, iFilters[iFType3]
+aFilt32 rbjeq aOut32, kCutOff3 *kLFO32, 1, kRes3, iFilters[iFType3]
+; Panning applied to each signal
 aL, aR pan2 aFilt*kEnv, kPan
-outs aL + aL2, aR + aR2
+aL2, aR2 pan2 aFilt2*kEnv, kPan
+
+aL21, aR21 pan2 aFilt21*kEnv2, kPan2
+aL22, aR22 pan2 aFilt22*kEnv2, kPan2
+
+aL31, aR31 pan2 aFilt31*kEnv3, kPan3
+aL32, aR32 pan2 aFilt32*kEnv3, kPan3
+; Add both signals back together on output
+outs (aL + aL2) + (aL21 + aL22) + (aL31 + aL32), (aR + aR2) + (aR21 + aR22) + (aR31 + aR32)
+
 
 endin
 
 </CsInstruments>
 <CsScore>
 ;causes Csound to run for about 7000 years...
-f1 0 4096 10 1 ; sine wave
-f2 0 4096 10 1 .5 ; saw wave
-f3 0 4096 10 1 .5 .2 .1 ;square wave
+f1 0 4096 10 10 ; sine wave
+f2 0 4096 10 10 .5 ; saw wave
+f3 0 4096 10 10 .5 .2 .1 ;square wave
 f4 0 4096 10 1 1   1   1    0.7 0.5   0.3  0.1 ; pulse wave
 f0 z
 </CsScore>
