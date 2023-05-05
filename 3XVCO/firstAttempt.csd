@@ -52,7 +52,7 @@ on multiple occasions. The following people are almost entirely responsible for 
 form caption("3xVCO") size(1200, 525), colour(100, 122, 153), guiMode("queue"), pluginId("def1"), bundle("./imgs")
 ;gentable bounds(1010, 100, 150, 150), tableNumber(99), channel("table1"), fill(0), outlineThickness(3)
 image bounds(0, 0, 1200, 525) file("./imgs/synthbg.png") channel("image50")
-signaldisplay bounds(794, 6, 194, 120), colour("white") displayType("waveform"), backgroundColour(84, 80, 102), zoom(2), signalVariable( "gaDisplaySendL", "gaDisplaySendR" ) channel("display1"), updateRate(50)
+signaldisplay bounds(794, 6, 194, 120), colour("white") displayType("waveform"), backgroundColour(84, 80, 102), zoom(2), signalVariable( "aL", "aR" ) channel("display1"), updateRate(50)
 //combobox bounds (796, 6, 80, 20), align(centre), channel("displayCombo1"), text("Waveform", "Spectrogram"), value(1)
 signaldisplay bounds(794, 130, 194, 120), colour("white") displayType("waveform"), backgroundColour(84, 80, 102), zoom(2), signalVariable("aL21", "aR21") channel("display2")
 signaldisplay bounds(794, 254, 194, 120), colour("white") displayType("waveform"), backgroundColour(84, 80, 102), zoom(2), signalVariable("aL31", "aR31") channel("display3")
@@ -224,8 +224,8 @@ label bounds(15, 142, 55, 10), channel("label8"), text("Depth"), fontSize(12)
 }
 ;|---------------------------------------------START WAVE #1---------------------------------------------|
 ; Wave Selection #1
-groupbox bounds(4, 6, 120, 120) channel("groupbox10010") colour(0, 0, 0, 128) text("Wave"), imgFile("./imgs/WavePanel.png") {
-combobox bounds(20, 30, 80, 23) channel("waveform"), align(centre), value(1), corners(5),  text("Saw", "Square", "Triangle", "Noise", "Buzz", "FM Bell", "FM B3 Organ", "FM Perc", "FM Metal", "FM Rhode", "Shaker", "Moog", "Bamboo", "Pluck", "Kick") colour:0(38, 40, 43, 255)
+groupbox bounds(4, 6, 120, 120) channel("groupbox10010") colour(0, 0, 0, 128) text("Source"), imgFile("./imgs/WavePanel.png") {
+combobox bounds(20, 30, 80, 23) channel("waveform"), align(left), value(1), corners(5),  text("Saw", "Square", "Triangle", "Noise", "Buzz", "FM Bell", "FM B3 Organ", "FM Perc", "FM Metal", "FM Rhode", "Shaker", "Moog", "Bamboo", "Snare", "Kick", "Sandpaper", "Crunch", "Sekere", "Cabasa", "WGPluck", "WGBow") colour:0(38, 40, 43, 255)
 rslider  bounds(12, 60, 50, 50), channel("pitch1"),  range(-24, 24, 0, 1, 1),  text("Pitch"),  , colour(0, 0, 255, 128), trackerColour(255, 255, 255, 255), markerColour(0, 0, 0, 255), filmstrip("./imgs/ChromedKnob.png", 101)
 rslider  bounds(60, 60, 50, 50), channel("fine1"),   range(-1, 1, 0, 1, 0.001),  text("Fine"),   , colour(0, 0, 255, 128), markerColour(0, 0, 0, 255), trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
 }
@@ -249,17 +249,19 @@ rslider bounds(15, 65, 50, 50), channel("amp"), range(0, 1, 0.7, 1, 0.01), text(
 }
 ; Panning, Volume, Detune, Option1 & Option2 Control #1
 groupbox bounds(638, 6, 150, 120) channel("groupbox10014") text("Options") colour(0, 0, 0, 128), imgFile("./imgs/OptionsPanel.png")  {
-rslider bounds(15, 15, 50, 50), channel("Panning"), range(0, 1, 0.5, 1, 0.01), text("Pan"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
-rslider bounds(15, 65, 50, 50), channel("Volume"), range(0, 1.25, 0.75, 1, 0.01), text("Gain"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
-vslider bounds(74, 20, 18, 90), channel("detune"), range(-1, 1, 0, 1, 0.1), colour(201, 90, 220, 225) markerColour(201, 90, 220, 255) trackerColour(128, 128, 128, 255), filmstrip("./imgs/DetuneSlider.png", 128)
-label bounds(64, 105, 40, 10), channel("label10"), text("Detune"), fontSize(13)
+rslider bounds(10, 15, 50, 50), channel("Panning"), range(0, 1, 0.5, 1, 0.01), text("Pan"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
+rslider bounds(10, 65, 50, 50), channel("Volume"), range(0, 1.25, 0.75, 1, 0.01), text("Gain"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
+vslider bounds(65, 20, 18, 90), channel("detune"), range(-1, 1, 0, 1, 0.1), colour(201, 90, 220, 225) markerColour(201, 90, 220, 255) trackerColour(128, 128, 128, 255), filmstrip("./imgs/DetuneSlider.png", 128)
+label bounds(54, 105, 40, 10), channel("label10"), text("Detune"), fontSize(12)
+;rslider bounds(90, 15, 50, 50), channel("OptionA"), range(0, 1, 0, 1, 0.01), text("Opt. 1"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
+;rslider bounds(90, 65, 50, 50), channel("OptionB"), range(0, 1, 0, 1, 0.01), text("Opt. 2"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
 }
 ;|---------------------------------------------END WAVE #1---------------------------------------------|
 
 ;|---------------------------------------------START WAVE #2---------------------------------------------|
 ; Wave Selection #2
-groupbox bounds(4, 130, 120, 120) channel("groupbox10021") colour(0, 0, 0, 128) text("Wave"), imgFile("./imgs/WavePanel.png") {
-optionbutton bounds(20, 30, 80, 23) channel("waveform2"), , corners(5),  text("Saw", "Square", "Triangle", "Noise") colour:0(38, 40, 43, 255)
+groupbox bounds(4, 130, 120, 120) channel("groupbox10021") colour(0, 0, 0, 128) text("Source"), imgFile("./imgs/WavePanel.png") {
+combobox bounds(20, 30, 80, 23) channel("waveform2"), value(2), corners(5),  text("Saw", "Square", "Triangle", "Noise", "Buzz", "FM Bell", "FM B3 Organ", "FM Perc", "FM Metal", "FM Rhode", "Shaker", "Moog", "Bamboo", "Snare", "Kick", "Sandpaper", "Crunch", "Sekere", "Cabasa", "WGPluck", "WGBow") colour:0(38, 40, 43, 255)
 rslider  bounds(12, 60, 50, 50), channel("pitch2"),  range(-24, 24, 0, 1, 1),  text("Pitch"),  , colour(0, 0, 255, 128), trackerColour(255, 255, 255, 255), markerColour(0, 0, 0, 255), filmstrip("./imgs/ChromedKnob.png", 101)
 rslider  bounds(60, 60, 50, 50), channel("fine2"),   range(-1, 1, 0, 1, 0.001),  text("Fine"),   , colour(0, 0, 255, 128), markerColour(0, 0, 0, 255), trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
 }
@@ -292,8 +294,8 @@ label bounds(82, 105, 40, 10), channel("label11"), text("Detune"), fontSize(13)
 
 ;|---------------------------------------------START WAVE #3---------------------------------------------|
 ; Wave Selection #3
-groupbox bounds(4, 254, 120, 120) channel("groupbox10031") colour(0, 0, 0, 128) text("Wave"), imgFile("./imgs/WavePanel.png") {
-optionbutton bounds(20, 30, 80, 23) channel("waveform3"), , corners(5), colour:0(38, 40, 43, 255), text("Saw", "Square", "Triangle", "Noise")
+groupbox bounds(4, 254, 120, 120) channel("groupbox10031") colour(0, 0, 0, 128) text("Source"), imgFile("./imgs/WavePanel.png") {
+combobox bounds(20, 30, 80, 23) channel("waveform3"), value(3), corners(5), colour:0(38, 40, 43, 255), text("Saw", "Square", "Triangle", "Noise", "Buzz", "FM Bell", "FM B3 Organ", "FM Perc", "FM Metal", "FM Rhode", "Shaker", "Moog", "Bamboo", "Snare", "Kick", "Sandpaper", "Crunch", "Sekere", "Cabasa", "WGPluck", "WGBow") colour:0(38, 40, 43, 255)
 rslider  bounds(12, 60, 50, 50), channel("pitch3"),  range(-24, 24, 0, 1, 1),  text("Pitch"),  , colour(0, 0, 255, 128), trackerColour(255, 255, 255, 255), markerColour(0, 0, 0, 255), filmstrip("./imgs/ChromedKnob.png", 101)
 rslider  bounds(60, 60, 50, 50), channel("fine3"),   range(-1,    1,     0,     1,     .001 ),  text("Fine"),   textBox(1), colour(0, 0, 255, 128), markerColour(0, 0, 0, 255), trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
 }
@@ -334,7 +336,6 @@ label bounds(82, 105, 40, 10), channel("label13"), text("Detune"), fontSize(13)
 ksmps = 16
 nchnls = 2
 0dbfs = 1
-;massign 0, 1
 
 ;Reverb Send for Left and Right channels
 
@@ -346,16 +347,25 @@ gaReverbSendR init 0
 gaDelaySendL init 0
 gaDelaySendR init 0
 
+;Flanger Send for Left and Right channels
+
 gaFlangerSendL init 0
 gaFlangerSendR init 0
+
+;F-Table global variables holding source files ( For FM Family of sounds )
 
 gitwopeaks	ftgen	4, 0, 256,  1, "sources/twopeaks.aiff", 0, 0, 0
 giWaveBlank ftgen 5, 0, 256, 1, "sources/fwavblnk.aiff", 0, 0, 0
 giImpluse20 ftgen 6, 0, 256, 1, "sources/impuls20.aiff", 0, 0, 0
 giMandPluck ftgen 7, 0, 8192, 1, "sources/mandpluk.aiff", 0, 0, 0
 
+; Display Send for Left and Right channels
+
 gaDisplaySendL init 0
 gaDisplaySendR init 0
+
+
+; Custom opcode for applying a resonant filter to Pink Noise
 
 opcode    resonsr,a,akki
     asig,kcf,kbw,iscal    xin
@@ -364,15 +374,19 @@ opcode    resonsr,a,akki
     kcf    downsamp    acf
     abw    interp    kbw
     kbw    downsamp    abw
-    asig      reson   asig, kcf, kbw,iscal
+    asig      reson   asig, kcf, kbw, iscal
         xout    asig
 endop
 
 ;instrument will be triggered by keyboard widget
 instr 1
+
 ; Each Oscillator operation is seperated by an entire line.
 ; One signal must be produced per channel ( to achieve stereo effects )
 ; Pitch and Fine Tune Control
+
+; Get values from channels using chnget opcode
+
 kpitch chnget "pitch1"
 kfine chnget "fine1"
 
@@ -381,25 +395,35 @@ kfine2 chnget "fine2"
 
 kpitch3 chnget "pitch3"
 kfine3 chnget "fine3"
+
 ; Get midi note number using notnum
+
 imidi notnum
+
 ; convert midi number to cycles per second ( frequency )
+
 kcps = p4
 
 kcps2 = p4
 
 kcps3 = p4
+
 ; Factor in the values of pitch and fine sliders
+
 kcps = kcps*semitone(kpitch)*cent(kfine*100)
 
 kcps20 = kcps2*semitone(kpitch2)*cent(kfine2*100)
 
 kcps30 = kcps3*semitone(kpitch3)*cent(kfine3*100)
+
 ; Amplitude or Volume of the Note will come from the p-field assigned in <CsOptions>
+
 iAmp = p5
 
-kAmpJitter = iAmp
+kAmpJitter = iAmp ; Artifact variable from when the jitter opcode was used to add liveliness to the output. Most variables use this now so it's staying.
+
 ; Envelope Control
+
 iAtt chnget "att" ; Attack Mod
 iDec chnget "dec" ; Decay Mod
 iSus chnget "sus" ; Sustain Mod
@@ -414,7 +438,9 @@ iAtt3 chnget "att3"
 iDec3 chnget "dec3"
 iSus3 chnget "sus3"
 iRel3 chnget "rel3"
+
 ; Filter Control
+
 kRes chnget "res"
 kCutOff chnget "cutoff"
 iFType chnget "filterType"
@@ -426,7 +452,9 @@ iFType2 chnget "filterType2"
 kRes3 chnget "res3"
 kCutOff3 chnget "cutoff3"
 iFType3 chnget "filterType3"
+
 ; LFO Control
+
 kLFOFreq chnget "LFOFreq"
 kAmp chnget "amp"
 
@@ -435,7 +463,9 @@ kAmp2 chnget "amp2"
 
 kLFOFreq3 chnget "LFOFreq3"
 kAmp3 chnget "amp3"
+
 ; Options Control
+
 kPan chnget "Panning"
 kVol chnget "Volume"
 kDet chnget "detune"
@@ -448,19 +478,26 @@ kPan3 chnget "Panning3"
 kVol3 chnget "Volume3"
 kDet3 chnget "detune3"
 
-; Waveform Selection -- Move to top and duplicate x3
+; Waveform Selection 
+
 kWaveForm chnget "waveform"
 kWaveForm2 chnget "waveform2"
 kWaveForm3 chnget "waveform3"
 
-kWaveForm -= 1
+kWaveForm -= 1 ; Modifying index for if-else statement
+kWaveForm2 -= 1
+kWaveForm3 -= 1
+
 ; Calculate classical ASDR Envelope
+
 kEnv madsr iAtt, iDec, iSus, iRel, 0, 1  
 
 kEnv2 madsr iAtt2, iDec2, iSus2, iRel2, 0, 1
 
 kEnv3 madsr iAtt3, iDec3, iSus3, iRel3, 0, 1
+
 ; Detune by duplicating frequency signal and offsetting by an inverted, constant rate
+
 kcps1 = kcps + kDet
 kcps2 = kcps - kDet
 
@@ -472,12 +509,19 @@ kcps32 = kcps30 + kDet3
 
 gkcps1 = kcps1
 gkcps2 = kcps2
+
 ; Fill array with VCO2 options: Integrated Saw, Square, and Triangle
+
 iWaves[] fillarray 8, 10, 12
+
 ; init Pulse Width for "thicker" sounds
+
 kPW init 1.0
 
-; --- Area Under Construction ---
+; This structure is used to reinitialize the instrument whenever a change is made to the WaveForm field.
+; Each time you switch between Saw, Square and Triangle, this code will execute to adjust the inputs of the VCO2 opcode
+
+; BEGIN WAVE 1
 
     kWavTrig  changed      kWaveForm        ;GENERATE A 'BANG' IF WAVEFORM SELECTOR CHANGES
     if kWavTrig=1 then    
@@ -495,24 +539,35 @@ elseif i(kWaveForm) == 2 then
     iMode = 12
 elseif i(kWaveForm) == 3 then
 
+
+    ; Pink Noise generated using pinkish opcode and a custom opcode to apply resonance 
+    
     aPink pinkish 1
 
     aOut resonsr aPink, kcps1, kcps1*0.01, 1
     aOut2 resonsr aPink, kcps2, kcps2*0.01, 1
     
-    aOut *= 50
-    aOut2 *= 50
+    ; Multiply amplitude by a lot because it's initially quiet
+    
+    aOut *= 100 
+    aOut2 *= 100
 
 goto SKIP
 
 elseif i(kWaveForm) == 4 then
-
-    aOut buzz kAmpJitter, kcps1, 1, 2
-    aOut2 buzz kAmpJitter, kcps2, 1, 2
+    
+    ; The buzz opcode produces a set of harmonically related sine partials
+    ; Users input a starting number of harmonics and a function table with a sine wave
+    ; This one uses 10 harmonics
+     
+    aOut buzz kAmpJitter, kcps1, 10, 1
+    aOut2 buzz kAmpJitter, kcps2, 10, 1
     
 goto SKIP
 
 elseif i(kWaveForm) == 5 then
+    
+    ; The FMBell opcode from the FM family of opcodes. All parameters are fixed
     
     kc1 = .5
     kc2 = 1
@@ -526,6 +581,8 @@ goto SKIP
 
 elseif i(kWaveForm) == 6 then
 
+    ; The Hammond B3 opcode from the FM family of opcodes. All parameters are fixed
+    
     kc1 = .5
     kc2 = .5
     kvDepth = 0.1
@@ -538,6 +595,8 @@ goto SKIP
 
 elseif i(kWaveForm) == 7 then
 
+    ; The percussion opcode from the FM family of opcodes. All parameters are fixed.
+    
     kc1 = 5
     kc2 = 4.5
     kvDepth = .01
@@ -550,8 +609,8 @@ goto SKIP
 
 elseif i(kWaveForm) == 8 then
     
-
-
+    ; The metal opcode from the FM family of opcodes. All parameters are fixed.
+    
     kvdepth = 0
     kvrate = 0
     kc1 = 5
@@ -569,8 +628,8 @@ goto SKIP
 
 elseif i(kWaveForm) == 9 then
 
-
-
+    ; The Rhods Piano opcode from the FM family of opcodes. All parameters are fixed.
+    
     kvdepth = 0.01
     kvrate = 3
     kc1 = 6
@@ -588,8 +647,9 @@ goto SKIP
 
 elseif i(kWaveForm) == 10 then
 
-    //aOut STKFlute kcps1, kAmpJitter, 1, 2, 8, 4, 100, 11, 100, 50, 128, 100
-    //aOut2 STKFlute kcps2, kAmpJitter 1, 2, 8, 4, 100, 11, 100, 50, 128, 100
+    ; Model of a maraca originally developed by Perry Cook but recoded for CSound.
+    ; This version had 8 'beans' and shakes twice
+    
     aOut shaker kAmpJitter, kcps1, 8, .99, 2
     aOut2 shaker kAmpJitter, kcps2, 8, .99, 2
     
@@ -597,18 +657,23 @@ goto SKIP
 
 elseif i(kWaveForm) == 11 then
 
+    ; Emulator of a Moog synth. This opcode inputs 3 different function tables: One for attack, another for the main loop, and one for the vibrato.
+    
     kFiltQ = .85
     kFiltRate = .0002
     kVib = 5
     kVibAmp = .01
     aOut moog kAmpJitter, kcps1, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
     aOut2 moog kAmpJitter, kcps2, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
+    aOut *= .5
+    aOut2 *= .5
     
 goto SKIP
 
 elseif i(kWaveForm) == 12 then
 
-    
+    ; Semi-Physical model of bamboo sticks clashing. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch to this sound. So regardless of where on the keyboard it is pressed, it will sound relatively the same.
     aOut bamboo kAmpJitter, .01
     aOut2 bamboo kAmpJitter, .01
     
@@ -616,19 +681,25 @@ goto SKIP
 
 elseif i(kWaveForm) == 13 then
 
+    ; Pluck opcode providing decaying string or drum sounds based on the Karplus-Strong algorithms.
+    
     aOut pluck kAmpJitter, kcps1, i(kcps1), 0, 3, .5, 10
     aOut2 pluck kAmpJitter, kcps2, i(kcps2), 0, 3, .5, 10
-
+    
 goto SKIP
 
 elseif i(kWaveForm) == 14 then
 
-
+    ; Custom Kick sound accepting multiple variables which define the behavior
+    ; Each variable is used in the construction of an amplitude and frequency envelope
+    ; which is eventually outputted as a somewhat desirable 808 bass drum sound.
+    ; Pitch of keys only slightly modifies sound here
+    
     idur   =         .25           ; Duration
     iamp   =         i(kAmpJitter)  ; Amplitude
     iacc   =         1            ; Accent
     irez   =         1            ; Resonance
-    iod    =         2            ; Overdrive
+    iod    =         1            ; Overdrive
     ilowf  =         80            ; Low Frequency
 
     kfenv  linseg    1000+(i(kcps1)/10),  .02, 180+(i(kcps1)/10), .04, 120+(i(kcps1)/10), idur-.06, ilowf+(i(kcps1)/10) ; Freq Envelope
@@ -647,14 +718,92 @@ elseif i(kWaveForm) == 14 then
 
 
 goto SKIP
+
+elseif i(kWaveForm) == 15 then
+
+    ; Semi-Physical model of sandpaper scraping. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    
+    iDettack = 0.1
+    iNumParticles = 128
+    
+    aOut sandpaper i(kAmpJitter), iDettack, iNumParticles, .5, 0
+    aOut2 sandpaper i(kAmpJitter), iDettack, iNumParticles, .5, 0
+    
+goto SKIP
+
+elseif i(kWaveForm) == 16 then
+    
+    ; Semi-Physical model of a crunch It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    
+    iDettack = 0.1
+    iNumParticles = 7
+    
+    aOut crunch i(kAmpJitter), iDettack, iNumParticles
+    aOut2 crunch i(kAmpJitter), iDettack, iNumParticles
+    
+goto SKIP
+
+elseif i(kWaveForm) == 17 then
+
+    ; Semi-Physical model of the sekere percussion instrument. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    iDettack = 0.01
+    iNumParticles = 64
+    
+    aOut sekere i(kAmpJitter), iDettack, iNumParticles
+    aOut2 sekere i(kAmpJitter), iDettack, iNumParticles
+    
+goto SKIP
+
+elseif i(kWaveForm) == 18 then
+
+    ; Semi-Physical model of the cabasa percussion instrument. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    
+    iDettack = 0.01
+    iNumParticles = 48
+    
+    aOut cabasa i(kAmpJitter), iDettack, iNumParticles
+    aOut2 cabasa i(kAmpJitter), iDettack, iNumParticles
+    
+goto SKIP
+
+elseif i(kWaveForm) == 19 then
+
+    iplk = 0.75
+    kpick = 0.75
+    krefl = 0.5
+    
+    aOut wgpluck2 iplk, kAmpJitter, i(kcps1), kpick, krefl
+    aOut2 wgpluck2 iplk, kAmpJitter, i(kcps2), kpick, krefl
+    aOut *= .75
+    aOut2 *= .75
+goto SKIP
+
+elseif i(kWaveForm) == 20 then
+
+    kPres = 3
+    kRat = 0.127236
+    kVib = 4.5
+    kVibAmp = 0.008
+    
+    aOut wgbow kAmpJitter, kcps1, kPres, kRat, kVib, kVibAmp
+    aOut2 wgbow kAmpJitter, kcps2, kPres, kRat, kVib, kVibAmp
+    
+goto SKIP
 endif
 
     aOut vco2 kAmpJitter, kcps1, iMode, kPW
     aOut2 vco2 kAmpJitter, kcps2, iMode, kPW
-    printk2 kcps1
-    printk2 kcps2
+
 SKIP:
 rireturn
+
+; END WAVEFROM 1
+
+; BEGIN WAVEFORM 2
 
     kWavTrig2  changed      kWaveForm2        ;GENERATE A 'BANG' IF WAVEFORM SELECTOR CHANGES
     if kWavTrig2=1 then    
@@ -680,6 +829,248 @@ elseif i(kWaveForm2) == 3 then
     aOut22 *= 50
 
 goto SKIP2
+
+elseif i(kWaveForm2) == 4 then
+    
+    ; The buzz opcode produces a set of harmonically related sine partials
+    ; Users input a starting number of harmonics and a function table with a sine wave
+    ; This one uses 10 harmonics
+     
+    aOut21 buzz kAmpJitter, kcps1, 10, 1
+    aOut22 buzz kAmpJitter, kcps2, 10, 1
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 5 then
+    
+    ; The FMBell opcode from the FM family of opcodes. All parameters are fixed
+    
+    kc1 = .5
+    kc2 = 1
+    kvDepth = .005
+    kvRate = 6
+    
+    aOut21 fmbell kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
+    aOut22 fmbell kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+
+goto SKIP2
+
+elseif i(kWaveForm2) == 6 then
+
+    ; The Hammond B3 opcode from the FM family of opcodes. All parameters are fixed
+    
+    kc1 = .5
+    kc2 = .5
+    kvDepth = 0.1
+    kvRate = 6
+    
+    aOut21 fmb3 kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
+    aOut22 fmb3 kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+        
+goto SKIP2
+
+elseif i(kWaveForm2) == 7 then
+
+    ; The percussion opcode from the FM family of opcodes. All parameters are fixed.
+    
+    kc1 = 5
+    kc2 = 4.5
+    kvDepth = .01
+    kvRate = 6
+    
+    aOut21 fmpercfl kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
+    aOut22 fmpercfl kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 8 then
+    
+    ; The metal opcode from the FM family of opcodes. All parameters are fixed.
+    
+    kvdepth = 0
+    kvrate = 0
+    kc1 = 5
+    kc2 = 5
+    ifn1 = 1
+    ifn2 = 4
+    ifn3 = 4
+    ifn4 = 1
+    ivfn = 1
+    
+    aOut21 fmmetal kAmpJitter, kcps1, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut22 fmmetal kAmpJitter, kcps2, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 9 then
+
+    ; The Rhods Piano opcode from the FM family of opcodes. All parameters are fixed.
+    
+    kvdepth = 0.01
+    kvrate = 3
+    kc1 = 6
+    kc2 = 0
+    ifn1 = 1
+    ifn2 = 1
+    ifn3 = 1
+    ifn4 = 5
+    ivfn = 1
+    
+    aOut21 fmrhode kAmpJitter, kcps1, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut22 fmrhode kAmpJitter, kcps2, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 10 then
+
+    ; Model of a maraca originally developed by Perry Cook but recoded for CSound.
+    ; This version had 8 'beans' and shakes twice
+    
+    aOut21 shaker kAmpJitter, kcps1, 8, .99, 2
+    aOut22 shaker kAmpJitter, kcps2, 8, .99, 2
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 11 then
+
+    ; Emulator of a Moog synth. This opcode inputs 3 different function tables: One for attack, another for the main loop, and one for the vibrato.
+    
+    kFiltQ = .85
+    kFiltRate = .0002
+    kVib = 5
+    kVibAmp = .01
+    aOut moog kAmpJitter, kcps1, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
+    aOut2 moog kAmpJitter, kcps2, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
+    aOut21 *= .5
+    aOut22 *= .5
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 12 then
+
+    ; Semi-Physical model of bamboo sticks clashing. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch to this sound. So regardless of where on the keyboard it is pressed, it will sound relatively the same.
+    aOut21 bamboo kAmpJitter, .01
+    aOut22 bamboo kAmpJitter, .01
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 13 then
+
+    ; Pluck opcode providing decaying string or drum sounds based on the Karplus-Strong algorithms.
+    
+    aOut21 pluck kAmpJitter, kcps1, i(kcps1), 0, 3, .5, 10
+    aOut22 pluck kAmpJitter, kcps2, i(kcps2), 0, 3, .5, 10
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 14 then
+
+    ; Custom Kick sound accepting multiple variables which define the behavior
+    ; Each variable is used in the construction of an amplitude and frequency envelope
+    ; which is eventually outputted as a somewhat desirable 808 bass drum sound.
+    ; Pitch of keys only slightly modifies sound here
+    
+    idur   =         .25           ; Duration
+    iamp   =         i(kAmpJitter)  ; Amplitude
+    iacc   =         1            ; Accent
+    irez   =         1            ; Resonance
+    iod    =         1            ; Overdrive
+    ilowf  =         80            ; Low Frequency
+
+    kfenv  linseg    1000+(i(kcps1)/10),  .02, 180+(i(kcps1)/10), .04, 120+(i(kcps1)/10), idur-.06, ilowf+(i(kcps1)/10) ; Freq Envelope
+    kaenv  expseg    .1, .001, 1, .02, 1, .04, .7, idur-.062, .7  ; Amp Envelope
+    kdclck linseg    0, .002, 1, idur-.042, 1, .04, 0             ; Declick
+    asig   rand      2                                            ; Random number
+
+    aflt   rezzy     asig, kfenv, irez*40         ; Filter
+
+    aout1  =         aflt*kaenv*3*iod/iacc        ; Scale the sound
+
+    krms   rms       aout1, 1000                  ; Limiter, get rms
+    klim   table3    krms*.5, 10, 1                ; Get limiting value
+    aOut21   =         aout1*klim*iamp*kdclck/sqrt(iod)*1.3   ; Scale again and ouput
+    aOut22   =        aout1*klim*iamp*kdclck/sqrt(iod)*1.3   ; Scale again and ouput
+
+
+goto SKIP2
+
+elseif i(kWaveForm2) == 15 then
+
+    ; Semi-Physical model of sandpaper scraping. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    
+    iDettack = 0.1
+    iNumParticles = 128
+    
+    aOut21 sandpaper i(kAmpJitter), iDettack, iNumParticles, .5, 0
+    aOut22 sandpaper i(kAmpJitter), iDettack, iNumParticles, .5, 0
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 16 then
+    
+    ; Semi-Physical model of a crunch It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    
+    iDettack = 0.1
+    iNumParticles = 7
+    
+    aOut21 crunch i(kAmpJitter), iDettack, iNumParticles
+    aOut22 crunch i(kAmpJitter), iDettack, iNumParticles
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 17 then
+
+    ; Semi-Physical model of the sekere percussion instrument. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    iDettack = 0.01
+    iNumParticles = 64
+    
+    aOut21 sekere i(kAmpJitter), iDettack, iNumParticles
+    aOut22 sekere i(kAmpJitter), iDettack, iNumParticles
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 18 then
+
+    ; Semi-Physical model of the cabasa percussion instrument. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    
+    iDettack = 0.01
+    iNumParticles = 48
+    
+    aOut21 cabasa i(kAmpJitter), iDettack, iNumParticles
+    aOut22 cabasa i(kAmpJitter), iDettack, iNumParticles
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 19 then
+
+    iplk = 0.75
+    kpick = 0.75
+    krefl = 0.5
+    
+    aOut21 wgpluck2 iplk, kAmpJitter, i(kcps1), kpick, krefl
+    aOut22 wgpluck2 iplk, kAmpJitter, i(kcps2), kpick, krefl
+    aOut21 *= .75
+    aOut22 *= .75
+    
+goto SKIP2
+
+elseif i(kWaveForm2) == 20 then
+
+    kPres = 3
+    kRat = 0.127236
+    kVib = 4.5
+    kVibAmp = 0.008
+    
+    aOut21 wgbow kAmpJitter, kcps1, kPres, kRat, kVib, kVibAmp
+    aOut22 wgbow kAmpJitter, kcps2, kPres, kRat, kVib, kVibAmp
+    
+goto SKIP2
+
 endif
 
     aOut21 vco2 iAmp, kcps21, iMode2, kPW
@@ -693,7 +1084,11 @@ rireturn
      ;IF A 'BANG' HAS BEEN GENERATED...
      reinit REINIT_VCO3               ;BEGIN A REINITIALISATION PASS FROM THE LABEL 'REINIT_VCO'
     endif
-    
+
+; END WAVEFORM 2
+
+; BEGIN WAVEFORM 3
+
 REINIT_VCO3:
 if i(kWaveForm3) == 0 then
     iMode3 = 0
@@ -712,6 +1107,248 @@ elseif i(kWaveForm3) == 3 then
     aOut32 *= 50
 
 goto SKIP3
+
+elseif i(kWaveForm3) == 4 then
+    
+    ; The buzz opcode produces a set of harmonically related sine partials
+    ; Users input a starting number of harmonics and a function table with a sine wave
+    ; This one uses 10 harmonics
+     
+    aOut31 buzz kAmpJitter, kcps1, 10, 1
+    aOut32 buzz kAmpJitter, kcps2, 10, 1
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 5 then
+    
+    ; The FMBell opcode from the FM family of opcodes. All parameters are fixed
+    
+    kc1 = .5
+    kc2 = 1
+    kvDepth = .005
+    kvRate = 6
+    
+    aOut31 fmbell kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
+    aOut32 fmbell kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+
+goto SKIP3
+
+elseif i(kWaveForm3) == 6 then
+
+    ; The Hammond B3 opcode from the FM family of opcodes. All parameters are fixed
+    
+    kc1 = .5
+    kc2 = .5
+    kvDepth = 0.1
+    kvRate = 6
+    
+    aOut31 fmb3 kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
+    aOut32 fmb3 kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+        
+goto SKIP3
+
+elseif i(kWaveForm3) == 7 then
+
+    ; The percussion opcode from the FM family of opcodes. All parameters are fixed.
+    
+    kc1 = 5
+    kc2 = 4.5
+    kvDepth = .01
+    kvRate = 6
+    
+    aOut31 fmpercfl kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
+    aOut32 fmpercfl kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 8 then
+    
+    ; The metal opcode from the FM family of opcodes. All parameters are fixed.
+    
+    kvdepth = 0
+    kvrate = 0
+    kc1 = 5
+    kc2 = 5
+    ifn1 = 1
+    ifn2 = 4
+    ifn3 = 4
+    ifn4 = 1
+    ivfn = 1
+    
+    aOut31 fmmetal kAmpJitter, kcps1, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut32 fmmetal kAmpJitter, kcps2, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 9 then
+
+    ; The Rhods Piano opcode from the FM family of opcodes. All parameters are fixed.
+    
+    kvdepth = 0.01
+    kvrate = 3
+    kc1 = 6
+    kc2 = 0
+    ifn1 = 1
+    ifn2 = 1
+    ifn3 = 1
+    ifn4 = 5
+    ivfn = 1
+    
+    aOut31 fmrhode kAmpJitter, kcps1, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut32 fmrhode kAmpJitter, kcps2, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 10 then
+
+    ; Model of a maraca originally developed by Perry Cook but recoded for CSound.
+    ; This version had 8 'beans' and shakes twice
+    
+    aOut31 shaker kAmpJitter, kcps1, 8, .99, 2
+    aOut32 shaker kAmpJitter, kcps2, 8, .99, 2
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 11 then
+
+    ; Emulator of a Moog synth. This opcode inputs 3 different function tables: One for attack, another for the main loop, and one for the vibrato.
+    
+    kFiltQ = .85
+    kFiltRate = .0002
+    kVib = 5
+    kVibAmp = .01
+    aOut moog kAmpJitter, kcps1, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
+    aOut2 moog kAmpJitter, kcps2, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
+    aOut31 *= .5
+    aOut32 *= .5
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 12 then
+
+    ; Semi-Physical model of bamboo sticks clashing. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch to this sound. So regardless of where on the keyboard it is pressed, it will sound relatively the same.
+    aOut31 bamboo kAmpJitter, .01
+    aOut32 bamboo kAmpJitter, .01
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 13 then
+
+    ; Pluck opcode providing decaying string or drum sounds based on the Karplus-Strong algorithms.
+    
+    aOut31 pluck kAmpJitter, kcps1, i(kcps1), 0, 3, .5, 10
+    aOut32 pluck kAmpJitter, kcps2, i(kcps2), 0, 3, .5, 10
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 14 then
+
+    ; Custom Kick sound accepting multiple variables which define the behavior
+    ; Each variable is used in the construction of an amplitude and frequency envelope
+    ; which is eventually outputted as a somewhat desirable 808 bass drum sound.
+    ; Pitch of keys only slightly modifies sound here
+    
+    idur   =         .25           ; Duration
+    iamp   =         i(kAmpJitter)  ; Amplitude
+    iacc   =         1            ; Accent
+    irez   =         1            ; Resonance
+    iod    =         1            ; Overdrive
+    ilowf  =         80            ; Low Frequency
+
+    kfenv  linseg    1000+(i(kcps1)/10),  .02, 180+(i(kcps1)/10), .04, 120+(i(kcps1)/10), idur-.06, ilowf+(i(kcps1)/10) ; Freq Envelope
+    kaenv  expseg    .1, .001, 1, .02, 1, .04, .7, idur-.062, .7  ; Amp Envelope
+    kdclck linseg    0, .002, 1, idur-.042, 1, .04, 0             ; Declick
+    asig   rand      2                                            ; Random number
+
+    aflt   rezzy     asig, kfenv, irez*40         ; Filter
+
+    aout1  =         aflt*kaenv*3*iod/iacc        ; Scale the sound
+
+    krms   rms       aout1, 1000                  ; Limiter, get rms
+    klim   table3    krms*.5, 10, 1                ; Get limiting value
+    aOut31   =         aout1*klim*iamp*kdclck/sqrt(iod)*1.3   ; Scale again and ouput
+    aOut32   =        aout1*klim*iamp*kdclck/sqrt(iod)*1.3   ; Scale again and ouput
+
+
+goto SKIP3
+
+elseif i(kWaveForm3) == 15 then
+
+    ; Semi-Physical model of sandpaper scraping. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    
+    iDettack = 0.1
+    iNumParticles = 128
+    
+    aOut31 sandpaper i(kAmpJitter), iDettack, iNumParticles, .5, 0
+    aOut32 sandpaper i(kAmpJitter), iDettack, iNumParticles, .5, 0
+    
+goto SKIP2
+
+elseif i(kWaveForm3) == 16 then
+    
+    ; Semi-Physical model of a crunch It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    
+    iDettack = 0.1
+    iNumParticles = 7
+    
+    aOut31 crunch i(kAmpJitter), iDettack, iNumParticles
+    aOut32 crunch i(kAmpJitter), iDettack, iNumParticles
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 17 then
+
+    ; Semi-Physical model of the sekere percussion instrument. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    iDettack = 0.01
+    iNumParticles = 64
+    
+    aOut31 sekere i(kAmpJitter), iDettack, iNumParticles
+    aOut32 sekere i(kAmpJitter), iDettack, iNumParticles
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 18 then
+
+    ; Semi-Physical model of the cabasa percussion instrument. It is a part of the PhISEM percussion opcodes.
+    ; There is no pitch modification available to this sound.
+    
+    iDettack = 0.01
+    iNumParticles = 48
+    
+    aOut31 cabasa i(kAmpJitter), iDettack, iNumParticles
+    aOut32 cabasa i(kAmpJitter), iDettack, iNumParticles
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 19 then
+
+    iplk = 0.75
+    kpick = 0.75
+    krefl = 0.5
+    
+    aOut31 wgpluck2 iplk, kAmpJitter, i(kcps1), kpick, krefl
+    aOut32 wgpluck2 iplk, kAmpJitter, i(kcps2), kpick, krefl
+    aOut31 *= .75
+    aOut32 *= .75
+    
+goto SKIP3
+
+elseif i(kWaveForm3) == 20 then
+
+    kPres = 3
+    kRat = 0.127236
+    kVib = 4.5
+    kVibAmp = 0.008
+    
+    aOut31 wgbow kAmpJitter, kcps1, kPres, kRat, kVib, kVibAmp
+    aOut32 wgbow kAmpJitter, kcps2, kPres, kRat, kVib, kVibAmp
+    
+goto SKIP3
+
 endif
 
     aOut31 vco2 iAmp, kcps31, iMode3, kPW
@@ -719,6 +1356,9 @@ endif
 
 SKIP3:
 rireturn
+
+; END WAVEFORM 3
+
 ; --- Area Above Under Construction ---
 
     ; Modify by volume
@@ -731,8 +1371,8 @@ rireturn
     aOut31 = aOut31 * kVol3
     aOut32 = aOut32 * kVol3
     ; LFO which oscillates between + and - value of defined frequency
-    kLFO lfo kAmp, kLFOFreq, 5
-    kLFO2 lfo kAmp, kLFOFreq, 5
+    kLFO lfo kAmp, kLFOFreq, 0
+    kLFO2 lfo kAmp, kLFOFreq, 0
 
     kLFO21 lfo kAmp2, kLFOFreq2, 0
     kLFO22 lfo kAmp2, kLFOFreq2, 0
@@ -808,15 +1448,6 @@ rireturn
 
     gaFlangerSendL = gaFlangerSendL + ((aL + aL2) + (aL21 + aL22) + (aL31 + aL32))
     gaFlangerSendR = gaFlangerSendR + ((aR + aR2) + (aR21 + aR22) + (aR31 + aR32))
-    
-    gaDisplaySendL = (gaDisplaySendL + (aL + aL2))/2
-    gaDisplaySendR = (gaDisplaySendR + (aR + aR2))/2
-    
-    
-    display gaDisplaySendL, .1, 1
-    display gaDisplaySendR, .1, 1
-    dispfft gaDisplaySendL, .1, 64, 1, 0
-    dispfft gaDisplaySendR, .1, 64, 1, 0
 
     clear gaDisplaySendL, gaDisplaySendR
     
@@ -945,16 +1576,6 @@ instr 15
     clear gaFlangerSendL, gaFlangerSendR
 endin
 
-instr 20
-    
-    kDisplayType, kTrig cabbageGetValue "displayCombo1"
-    STypes[] init 2
-    STypes[0] = "waveform"
-    STypes[1] = "spectrogram"
-    
-    cabbageSet kTrig, "display1", "displayType", STypes[kDisplayType-1]
-
-endin
 </CsInstruments>
 <CsScore>
 ;causes Csound to run for about 7000 years...
@@ -969,6 +1590,5 @@ f10 0 1024 -8 1 256 1 256 .5 128 .3 128 .1 256 .1
 i5 0 z
 i10 0 z
 i15 0 z
-i20 0 z
 </CsScore>
 </CsoundSynthesizer>
