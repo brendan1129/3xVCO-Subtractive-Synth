@@ -49,7 +49,7 @@ on multiple occasions. The following people are almost entirely responsible for 
 */
 <Cabbage> bounds(0, 0, 0, 0)
 ; GUI Initialization
-form caption("3xVCO") size(1200, 525), colour(100, 122, 153), guiMode("queue"), pluginId("def1"), bundle("./imgs")
+form caption("3xVCO") size(1200, 525), colour(100, 122, 153), guiMode("queue"), pluginId("def1"), bundle("./imgs", "./sources", "./presets")
 ;gentable bounds(1010, 100, 150, 150), tableNumber(99), channel("table1"), fill(0), outlineThickness(3)
 image bounds(0, 0, 1200, 525) file("./imgs/synthbg.png") channel("image50")
 signaldisplay bounds(794, 6, 194, 120), colour("white") displayType("waveform"), backgroundColour(84, 80, 102), zoom(2), signalVariable( "aL", "aR" ) channel("display1"), updateRate(50)
@@ -185,9 +185,9 @@ image bounds(1095, 424, 82, 80),  channel("image134"), file("./imgs/blackkey.png
 image bounds(1117, 424, 82, 80),  channel("image135"), file("./imgs/blackkey.png"), mouseInteraction(0)
 image bounds(1136, 424, 82, 80),  channel("image136"), file("./imgs/blackkey.png"), mouseInteraction(0)
 
-combobox bounds(130, 388, 659, 30), populate("*.snaps"), corners(5), channelType("string") automatable(0) channel("combo52") value("0") text("Swirly Goddess") colour(38, 40, 43, 255)
-filebutton bounds(4, 388, 120, 30), text("Save", "Save"), corners(5), populate("*.snaps", "test"), mode("named preset") channel("filebutton53") colour:0(38, 40, 43, 255)
-filebutton bounds(794, 388, 194, 30), text("Remove", "Remove"), corners(5), populate("*.snaps", "test"), mode("remove preset") channel("filebutton54") colour:0(38, 40, 43, 255)
+combobox bounds(130, 388, 659, 30), populate("./presets/*.snaps"), corners(5), channelType("string") automatable(0) channel("combo52") value("0") text("Swirly Goddess") colour(38, 40, 43, 255)
+filebutton bounds(4, 388, 120, 30), text("Save", "Save"), corners(5), populate("./presets/*.snaps", "test"), mode("named preset") channel("filebutton53") colour:0(38, 40, 43, 255)
+filebutton bounds(794, 388, 194, 30), text("Remove", "Remove"), corners(5), populate("*/presets/.snaps", "test"), mode("remove preset") channel("filebutton54") colour:0(38, 40, 43, 255)
 
 groupbox bounds(994, 6, 201, 40) channel("groupbox10001") colour(0, 0, 0, 128), imgFile("./imgs/MasterPanel.png") {
 label bounds(74, 15, 55, 10), channel("label0"), text("Master"), fontSize(15)
@@ -249,9 +249,9 @@ rslider bounds(15, 65, 50, 50), channel("amp"), range(0, 1, 0.7, 1, 0.01), text(
 }
 ; Panning, Volume, Detune, Option1 & Option2 Control #1
 groupbox bounds(638, 6, 150, 120) channel("groupbox10014") text("Options") colour(0, 0, 0, 128), imgFile("./imgs/OptionsPanel.png")  {
-rslider bounds(10, 15, 50, 50), channel("Panning"), range(0, 1, 0.5, 1, 0.01), text("Pan"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
-rslider bounds(10, 65, 50, 50), channel("Volume"), range(0, 1.25, 0.75, 1, 0.01), text("Gain"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
-vslider bounds(65, 20, 18, 90), channel("detune"), range(-1, 1, 0, 1, 0.1), colour(201, 90, 220, 225) markerColour(201, 90, 220, 255) trackerColour(128, 128, 128, 255), filmstrip("./imgs/DetuneSlider.png", 128)
+rslider bounds(15, 15, 50, 50), channel("Panning"), range(0, 1, 0.5, 1, 0.01), text("Pan"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
+rslider bounds(15, 65, 50, 50), channel("Volume"), range(0, 1.25, 0.75, 1, 0.01), text("Gain"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
+vslider bounds(94, 20, 18, 90), channel("detune"), range(-1, 1, 0, 1, 0.1), colour(201, 90, 220, 225) markerColour(201, 90, 220, 255) trackerColour(128, 128, 128, 255), filmstrip("./imgs/DetuneSlider.png", 128)
 label bounds(54, 105, 40, 10), channel("label10"), text("Detune"), fontSize(12)
 ;rslider bounds(90, 15, 50, 50), channel("OptionA"), range(0, 1, 0, 1, 0.01), text("Opt. 1"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
 ;rslider bounds(90, 65, 50, 50), channel("OptionB"), range(0, 1, 0, 1, 0.01), text("Opt. 2"), colour(0, 0, 255, 128) markerColour(0, 0, 0, 255) trackerColour(255, 255, 255), filmstrip("./imgs/ChromedKnob.png", 101)
@@ -535,6 +535,7 @@ if i(kWaveForm) == 0 then
     iMode = 0
 elseif i(kWaveForm) == 1 then
     iMode = 10
+    printk2 kAmpJitter 
 elseif i(kWaveForm) == 2 then
     iMode = 12
 elseif i(kWaveForm) == 3 then
@@ -628,7 +629,7 @@ goto SKIP
 
 elseif i(kWaveForm) == 9 then
 
-    ; The Rhods Piano opcode from the FM family of opcodes. All parameters are fixed.
+    ; The Rhodes Piano opcode from the FM family of opcodes. All parameters are fixed.
     
     kvdepth = 0.01
     kvrate = 3
@@ -730,6 +731,9 @@ elseif i(kWaveForm) == 15 then
     aOut sandpaper i(kAmpJitter), iDettack, iNumParticles, .5, 0
     aOut2 sandpaper i(kAmpJitter), iDettack, iNumParticles, .5, 0
     
+    aOut *= 5
+    aOut2 *= 5
+    
 goto SKIP
 
 elseif i(kWaveForm) == 16 then
@@ -743,6 +747,9 @@ elseif i(kWaveForm) == 16 then
     aOut crunch i(kAmpJitter), iDettack, iNumParticles
     aOut2 crunch i(kAmpJitter), iDettack, iNumParticles
     
+    aOut *= 10
+    aOut2 *= 10
+    
 goto SKIP
 
 elseif i(kWaveForm) == 17 then
@@ -754,6 +761,9 @@ elseif i(kWaveForm) == 17 then
     
     aOut sekere i(kAmpJitter), iDettack, iNumParticles
     aOut2 sekere i(kAmpJitter), iDettack, iNumParticles
+    
+    aOut *= 20
+    aOut2 *= 20
     
 goto SKIP
 
@@ -768,6 +778,9 @@ elseif i(kWaveForm) == 18 then
     aOut cabasa i(kAmpJitter), iDettack, iNumParticles
     aOut2 cabasa i(kAmpJitter), iDettack, iNumParticles
     
+    aOut *= 20
+    aOut2 *= 20
+    
 goto SKIP
 
 elseif i(kWaveForm) == 19 then
@@ -778,8 +791,10 @@ elseif i(kWaveForm) == 19 then
     
     aOut wgpluck2 iplk, kAmpJitter, i(kcps1), kpick, krefl
     aOut2 wgpluck2 iplk, kAmpJitter, i(kcps2), kpick, krefl
+    
     aOut *= .75
     aOut2 *= .75
+    
 goto SKIP
 
 elseif i(kWaveForm) == 20 then
@@ -795,8 +810,8 @@ elseif i(kWaveForm) == 20 then
 goto SKIP
 endif
 
-    aOut vco2 kAmpJitter, kcps1, iMode, kPW
-    aOut2 vco2 kAmpJitter, kcps2, iMode, kPW
+    aOut vco2 kAmpJitter, kcps1, iMode, kPW, 0, 0.25
+    aOut2 vco2 kAmpJitter, kcps2, iMode, kPW, 0, 0.25
 
 SKIP:
 rireturn
@@ -836,8 +851,8 @@ elseif i(kWaveForm2) == 4 then
     ; Users input a starting number of harmonics and a function table with a sine wave
     ; This one uses 10 harmonics
      
-    aOut21 buzz kAmpJitter, kcps1, 10, 1
-    aOut22 buzz kAmpJitter, kcps2, 10, 1
+    aOut21 buzz kAmpJitter, kcps21, 10, 1
+    aOut22 buzz kAmpJitter, kcps22, 10, 1
     
 goto SKIP2
 
@@ -850,8 +865,8 @@ elseif i(kWaveForm2) == 5 then
     kvDepth = .005
     kvRate = 6
     
-    aOut21 fmbell kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
-    aOut22 fmbell kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+    aOut21 fmbell kAmpJitter, kcps21, kc1, kc2, kvDepth, kvRate
+    aOut22 fmbell kAmpJitter, kcps22, kc1, kc2, kvDepth, kvRate
 
 goto SKIP2
 
@@ -864,8 +879,8 @@ elseif i(kWaveForm2) == 6 then
     kvDepth = 0.1
     kvRate = 6
     
-    aOut21 fmb3 kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
-    aOut22 fmb3 kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+    aOut21 fmb3 kAmpJitter, kcps21, kc1, kc2, kvDepth, kvRate
+    aOut22 fmb3 kAmpJitter, kcps22, kc1, kc2, kvDepth, kvRate
         
 goto SKIP2
 
@@ -878,8 +893,8 @@ elseif i(kWaveForm2) == 7 then
     kvDepth = .01
     kvRate = 6
     
-    aOut21 fmpercfl kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
-    aOut22 fmpercfl kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+    aOut21 fmpercfl kAmpJitter, kcps21, kc1, kc2, kvDepth, kvRate
+    aOut22 fmpercfl kAmpJitter, kcps22, kc1, kc2, kvDepth, kvRate
     
 goto SKIP2
 
@@ -897,8 +912,8 @@ elseif i(kWaveForm2) == 8 then
     ifn4 = 1
     ivfn = 1
     
-    aOut21 fmmetal kAmpJitter, kcps1, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
-    aOut22 fmmetal kAmpJitter, kcps2, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut21 fmmetal kAmpJitter, kcps21, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut22 fmmetal kAmpJitter, kcps22, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
     
 goto SKIP2
 
@@ -916,8 +931,8 @@ elseif i(kWaveForm2) == 9 then
     ifn4 = 5
     ivfn = 1
     
-    aOut21 fmrhode kAmpJitter, kcps1, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
-    aOut22 fmrhode kAmpJitter, kcps2, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut21 fmrhode kAmpJitter, kcps21, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut22 fmrhode kAmpJitter, kcps22, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
     
 goto SKIP2
 
@@ -926,8 +941,8 @@ elseif i(kWaveForm2) == 10 then
     ; Model of a maraca originally developed by Perry Cook but recoded for CSound.
     ; This version had 8 'beans' and shakes twice
     
-    aOut21 shaker kAmpJitter, kcps1, 8, .99, 2
-    aOut22 shaker kAmpJitter, kcps2, 8, .99, 2
+    aOut21 shaker kAmpJitter, kcps21, 8, .99, 2
+    aOut22 shaker kAmpJitter, kcps22, 8, .99, 2
     
 goto SKIP2
 
@@ -939,8 +954,8 @@ elseif i(kWaveForm2) == 11 then
     kFiltRate = .0002
     kVib = 5
     kVibAmp = .01
-    aOut moog kAmpJitter, kcps1, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
-    aOut2 moog kAmpJitter, kcps2, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
+    aOut moog kAmpJitter, kcps21, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
+    aOut2 moog kAmpJitter, kcps22, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
     aOut21 *= .5
     aOut22 *= .5
     
@@ -959,8 +974,8 @@ elseif i(kWaveForm2) == 13 then
 
     ; Pluck opcode providing decaying string or drum sounds based on the Karplus-Strong algorithms.
     
-    aOut21 pluck kAmpJitter, kcps1, i(kcps1), 0, 3, .5, 10
-    aOut22 pluck kAmpJitter, kcps2, i(kcps2), 0, 3, .5, 10
+    aOut21 pluck kAmpJitter, kcps21, i(kcps21), 0, 3, .5, 10
+    aOut22 pluck kAmpJitter, kcps22, i(kcps22), 0, 3, .5, 10
     
 goto SKIP2
 
@@ -978,7 +993,7 @@ elseif i(kWaveForm2) == 14 then
     iod    =         1            ; Overdrive
     ilowf  =         80            ; Low Frequency
 
-    kfenv  linseg    1000+(i(kcps1)/10),  .02, 180+(i(kcps1)/10), .04, 120+(i(kcps1)/10), idur-.06, ilowf+(i(kcps1)/10) ; Freq Envelope
+    kfenv  linseg    1000+(i(kcps21)/10),  .02, 180+(i(kcps21)/10), .04, 120+(i(kcps21)/10), idur-.06, ilowf+(i(kcps21)/10) ; Freq Envelope
     kaenv  expseg    .1, .001, 1, .02, 1, .04, .7, idur-.062, .7  ; Amp Envelope
     kdclck linseg    0, .002, 1, idur-.042, 1, .04, 0             ; Declick
     asig   rand      2                                            ; Random number
@@ -1052,8 +1067,8 @@ elseif i(kWaveForm2) == 19 then
     kpick = 0.75
     krefl = 0.5
     
-    aOut21 wgpluck2 iplk, kAmpJitter, i(kcps1), kpick, krefl
-    aOut22 wgpluck2 iplk, kAmpJitter, i(kcps2), kpick, krefl
+    aOut21 wgpluck2 iplk, kAmpJitter, i(kcps21), kpick, krefl
+    aOut22 wgpluck2 iplk, kAmpJitter, i(kcps22), kpick, krefl
     aOut21 *= .75
     aOut22 *= .75
     
@@ -1066,8 +1081,8 @@ elseif i(kWaveForm2) == 20 then
     kVib = 4.5
     kVibAmp = 0.008
     
-    aOut21 wgbow kAmpJitter, kcps1, kPres, kRat, kVib, kVibAmp
-    aOut22 wgbow kAmpJitter, kcps2, kPres, kRat, kVib, kVibAmp
+    aOut21 wgbow kAmpJitter, kcps21, kPres, kRat, kVib, kVibAmp
+    aOut22 wgbow kAmpJitter, kcps22, kPres, kRat, kVib, kVibAmp
     
 goto SKIP2
 
@@ -1114,8 +1129,8 @@ elseif i(kWaveForm3) == 4 then
     ; Users input a starting number of harmonics and a function table with a sine wave
     ; This one uses 10 harmonics
      
-    aOut31 buzz kAmpJitter, kcps1, 10, 1
-    aOut32 buzz kAmpJitter, kcps2, 10, 1
+    aOut31 buzz kAmpJitter, kcps31, 10, 1
+    aOut32 buzz kAmpJitter, kcps32, 10, 1
     
 goto SKIP3
 
@@ -1128,8 +1143,8 @@ elseif i(kWaveForm3) == 5 then
     kvDepth = .005
     kvRate = 6
     
-    aOut31 fmbell kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
-    aOut32 fmbell kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+    aOut31 fmbell kAmpJitter, kcps31, kc1, kc2, kvDepth, kvRate
+    aOut32 fmbell kAmpJitter, kcps32, kc1, kc2, kvDepth, kvRate
 
 goto SKIP3
 
@@ -1142,8 +1157,8 @@ elseif i(kWaveForm3) == 6 then
     kvDepth = 0.1
     kvRate = 6
     
-    aOut31 fmb3 kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
-    aOut32 fmb3 kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+    aOut31 fmb3 kAmpJitter, kcps31, kc1, kc2, kvDepth, kvRate
+    aOut32 fmb3 kAmpJitter, kcps32, kc1, kc2, kvDepth, kvRate
         
 goto SKIP3
 
@@ -1156,8 +1171,8 @@ elseif i(kWaveForm3) == 7 then
     kvDepth = .01
     kvRate = 6
     
-    aOut31 fmpercfl kAmpJitter, kcps1, kc1, kc2, kvDepth, kvRate
-    aOut32 fmpercfl kAmpJitter, kcps2, kc1, kc2, kvDepth, kvRate
+    aOut31 fmpercfl kAmpJitter, kcps31, kc1, kc2, kvDepth, kvRate
+    aOut32 fmpercfl kAmpJitter, kcps32, kc1, kc2, kvDepth, kvRate
     
 goto SKIP3
 
@@ -1175,8 +1190,8 @@ elseif i(kWaveForm3) == 8 then
     ifn4 = 1
     ivfn = 1
     
-    aOut31 fmmetal kAmpJitter, kcps1, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
-    aOut32 fmmetal kAmpJitter, kcps2, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut31 fmmetal kAmpJitter, kcps31, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut32 fmmetal kAmpJitter, kcps32, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
     
 goto SKIP3
 
@@ -1194,8 +1209,8 @@ elseif i(kWaveForm3) == 9 then
     ifn4 = 5
     ivfn = 1
     
-    aOut31 fmrhode kAmpJitter, kcps1, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
-    aOut32 fmrhode kAmpJitter, kcps2, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut31 fmrhode kAmpJitter, kcps31, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
+    aOut32 fmrhode kAmpJitter, kcps32, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
     
 goto SKIP3
 
@@ -1204,8 +1219,8 @@ elseif i(kWaveForm3) == 10 then
     ; Model of a maraca originally developed by Perry Cook but recoded for CSound.
     ; This version had 8 'beans' and shakes twice
     
-    aOut31 shaker kAmpJitter, kcps1, 8, .99, 2
-    aOut32 shaker kAmpJitter, kcps2, 8, .99, 2
+    aOut31 shaker kAmpJitter, kcps31, 8, .99, 2
+    aOut32 shaker kAmpJitter, kcps32, 8, .99, 2
     
 goto SKIP3
 
@@ -1217,8 +1232,8 @@ elseif i(kWaveForm3) == 11 then
     kFiltRate = .0002
     kVib = 5
     kVibAmp = .01
-    aOut moog kAmpJitter, kcps1, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
-    aOut2 moog kAmpJitter, kcps2, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
+    aOut moog kAmpJitter, kcps31, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
+    aOut2 moog kAmpJitter, kcps32, kFiltQ, kFiltRate, kVib, kVibAmp, 7, 6, 1
     aOut31 *= .5
     aOut32 *= .5
     
@@ -1237,8 +1252,8 @@ elseif i(kWaveForm3) == 13 then
 
     ; Pluck opcode providing decaying string or drum sounds based on the Karplus-Strong algorithms.
     
-    aOut31 pluck kAmpJitter, kcps1, i(kcps1), 0, 3, .5, 10
-    aOut32 pluck kAmpJitter, kcps2, i(kcps2), 0, 3, .5, 10
+    aOut31 pluck kAmpJitter, kcps31, i(kcps31), 0, 3, .5, 10
+    aOut32 pluck kAmpJitter, kcps32, i(kcps32), 0, 3, .5, 10
     
 goto SKIP3
 
@@ -1256,7 +1271,7 @@ elseif i(kWaveForm3) == 14 then
     iod    =         1            ; Overdrive
     ilowf  =         80            ; Low Frequency
 
-    kfenv  linseg    1000+(i(kcps1)/10),  .02, 180+(i(kcps1)/10), .04, 120+(i(kcps1)/10), idur-.06, ilowf+(i(kcps1)/10) ; Freq Envelope
+    kfenv  linseg    1000+(i(kcps1)/10),  .02, 180+(i(kcps31)/10), .04, 120+(i(kcps31)/10), idur-.06, ilowf+(i(kcps31)/10) ; Freq Envelope
     kaenv  expseg    .1, .001, 1, .02, 1, .04, .7, idur-.062, .7  ; Amp Envelope
     kdclck linseg    0, .002, 1, idur-.042, 1, .04, 0             ; Declick
     asig   rand      2                                            ; Random number
@@ -1330,8 +1345,8 @@ elseif i(kWaveForm3) == 19 then
     kpick = 0.75
     krefl = 0.5
     
-    aOut31 wgpluck2 iplk, kAmpJitter, i(kcps1), kpick, krefl
-    aOut32 wgpluck2 iplk, kAmpJitter, i(kcps2), kpick, krefl
+    aOut31 wgpluck2 iplk, kAmpJitter, i(kcps31), kpick, krefl
+    aOut32 wgpluck2 iplk, kAmpJitter, i(kcps32), kpick, krefl
     aOut31 *= .75
     aOut32 *= .75
     
@@ -1344,8 +1359,8 @@ elseif i(kWaveForm3) == 20 then
     kVib = 4.5
     kVibAmp = 0.008
     
-    aOut31 wgbow kAmpJitter, kcps1, kPres, kRat, kVib, kVibAmp
-    aOut32 wgbow kAmpJitter, kcps2, kPres, kRat, kVib, kVibAmp
+    aOut31 wgbow kAmpJitter, kcps31, kPres, kRat, kVib, kVibAmp
+    aOut32 wgbow kAmpJitter, kcps32, kPres, kRat, kVib, kVibAmp
     
 goto SKIP3
 
@@ -1468,6 +1483,8 @@ instr 5
     
     clear gaReverbSendL, gaReverbSendR
 endin
+
+/* delay unit */
 
 instr 10
 
