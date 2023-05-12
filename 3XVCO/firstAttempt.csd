@@ -18,7 +18,7 @@ in the 3xOsc, which I will list below:
 
     - Phase Offset Control for each wave
     - Invert Phase Option for each wave
-    - Sine, Rounded Saw, Noise, and Custom as options for generatable waves
+    - Sine, Rounded Saw and Custom as options for generatable waves
     - AM OSC 3, which converts the third oscillator into an amplitude modulator for the first two oscillators
     - HQ Option which provides anti-aliasing for the oscillators from 15Hz to 20kHz
 
@@ -29,6 +29,9 @@ in the 3xOsc. I will also list these capabilities below:
     - Resonant High and Low pass filter
     - ASDR Envelope
     - Low-Frequency Oscillation (LFO) 
+    - Reverb Effect Unit 
+    - Ping Pong Delay Effect Unit
+    - Flanger Effect Unit
     
 I am very pleased with the results thus far, but I am also aware there is much more that could be done. 
 I plan to continue working on this and refining it. With the possibility of adding new features as I gain more experience with CSound and Cabbage.
@@ -47,18 +50,19 @@ on multiple occasions. The following people are almost entirely responsible for 
     - Steven Yi, Accomplished Developer of CSound and responsible for introducing me to features of the language through his YouTube channel
 --------------------------------------------------------------------------------------------------------------------------------------------
 */
-<Cabbage> bounds(0, 0, 0, 0)
+<Cabbage> 
+bounds(0, 0, 0, 0)
 ; GUI Initialization
 form caption("3xVCO") size(1200, 525), colour(100, 122, 153), guiMode("queue"), pluginId("def1"), bundle("./imgs", "./sources", "./presets")
 ;gentable bounds(1010, 100, 150, 150), tableNumber(99), channel("table1"), fill(0), outlineThickness(3)
 image bounds(0, 0, 1200, 525) file("./imgs/synthbg.png") channel("image50")
 signaldisplay bounds(794, 6, 194, 120), colour("white") displayType("waveform"), backgroundColour(84, 80, 102), zoom(2), signalVariable( "aL", "aR" ) channel("display1"), updateRate(50)
-//combobox bounds (796, 6, 80, 20), align(centre), channel("displayCombo1"), text("Waveform", "Spectrogram"), value(1)
 signaldisplay bounds(794, 130, 194, 120), colour("white") displayType("waveform"), backgroundColour(84, 80, 102), zoom(2), signalVariable("aL21", "aR21") channel("display2")
 signaldisplay bounds(794, 254, 194, 120), colour("white") displayType("waveform"), backgroundColour(84, 80, 102), zoom(2), signalVariable("aL31", "aR31") channel("display3")
 
 keyboard bounds(0, 430, 1200, 95), keyWidth(19) channel("keyboard2"), middleC(4), value(12), scrollbars(0), mouseOverKeyColour(205, 0, 235, 128), keyDownColour(205, 0, 235, 194), blackNoteColour(48, 64, 99, 255), whiteNoteColour(212, 212, 212, 255), keypressBaseOctave(5)
 
+/* Keys Declaration */
 image bounds(-55, 413, 130, 128), channel("image196"), file("./imgs/whitekey.png"), mouseInteraction(0)
 image bounds(-36, 413, 130, 128), channel("image197"), file("./imgs/whitekey.png"), mouseInteraction(0)
 image bounds(-17, 413, 130, 128), channel("image198"), file("./imgs/whitekey.png"), mouseInteraction(0)
@@ -1374,7 +1378,6 @@ rireturn
 
 ; END WAVEFORM 3
 
-; --- Area Above Under Construction ---
 
     ; Modify by volume
     aOut = aOut * kVol
@@ -1468,7 +1471,7 @@ rireturn
     
 endin
 
-; Reverb Unit
+/* Reverb Unit */
 instr 5
     kWaveForm chnget "waveform"
     kroomsize chnget "roomsize"
@@ -1484,12 +1487,12 @@ instr 5
     clear gaReverbSendL, gaReverbSendR
 endin
 
-/* delay unit */
+/* Delay Unit */
 
 instr 10
 
-    kTime    chnget "time"   ; delay time
-    kFB      chnget "fdbk"   ; feedback ratio
+    kTime    chnget "time"   
+    kFB      chnget "fdbk"   
     kMix     chnget "mix"
     kCut   chnget "delaycutoff"
     kdamp    chnget "damp"
@@ -1505,7 +1508,6 @@ instr 10
     aDelL  deltapi aTime
     aDelL   tone aDelL, kCut 
              delayw aL_OS + (aDelL*kFB)
-    // Below this works
     
     aBuf    delayr 10
     aDelR  deltapi aTime
@@ -1543,6 +1545,8 @@ instr 10
     clear gaDelaySendL, gaDelaySendR
 
 endin
+
+/* Flanger Unit */
 
 instr 15
     kDel chnget "del"
@@ -1584,12 +1588,6 @@ instr 15
     gaDisplaySendL = gaDisplaySendL + gaFlangerSendL
     gaDisplaySendR = gaDisplaySendR + gaFlangerSendR
     
-    //gaDisplaySendL *= .5
-    //gaDisplaySendR *= .5
-    /*
-    dispfft gaFlangerSendL, .1, 2048, 0, 1
-    dispfft gaFlangerSendR, .1, 2048, 0, 1
-    */
     clear gaFlangerSendL, gaFlangerSendR
 endin
 
@@ -1600,8 +1598,6 @@ f0 z
 
 f1 0 32768 10 1                     ;sine
 f2 0 1024 7 0 512 1 0 -1 512 0      ;saw
-;f3 0 1024 7 1 512 1 0 -1 512 -1     ;square
-;f4 0 1024 7 -1 512 1 1 -1 512 -1   ;triangle
 f10 0 1024 -8 1 256 1 256 .5 128 .3 128 .1 256 .1
 
 i5 0 z
