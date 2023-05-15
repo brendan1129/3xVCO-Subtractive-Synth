@@ -2,7 +2,7 @@
 ## Description
 For my senior capstone project, I attempted to combine my passion for music with the 4 years of Computer Science knowledge I've accumulated in school. The result was the 3xVCO!
 
-![Imitation of the 3xOsc by image-line](3XVCO/imgs/Synth.png)
+![Imitation of the 3xOsc by image-line](3XVCO/imgs/FinalLook.png)
 
 This was made using the wonderful front-end framework [Cabbage Audio](https://cabbageaudio.com) for [CSound](https://csound.com), a mature and robust audio-programming language. Cabbage provides numerous widgets and extra opcodes that allow developers to update CSound parameters in real-time, making plug-in effect and synthesizer creation a breeze. I am extremely grateful for this framework because it afforded me so much extra time to focus on the core functionality of the program.
 
